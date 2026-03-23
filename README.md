@@ -24,7 +24,7 @@ This level explores human evolution, interstellar travel, and futuristic citysca
 ---
 
 ##  Advanced Requirements
-This project implementstwo advanced technical features:
+This project implements two advanced technical features:
 
 1. **Conversational Social Avatars**: You are able to communicate with social avatar essential a guide while you walk through the museum.
 2. **Multiplayer & Voice Chat**: You are able to explore the exhibits with others in real-time and discuss the history of the world using integrated voice communication.
