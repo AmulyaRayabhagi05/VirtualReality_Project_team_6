@@ -38,7 +38,7 @@ This project implementstwo advanced technical features:
 
 ---
 
-## 🛠️ Installation & Usage
+## Installation & Usage
 1. **Clone the Repo**: 
    ```bash
    git clone [https://github.com/AmulyaRayabhagi05/VirtualReality-Project.git]
