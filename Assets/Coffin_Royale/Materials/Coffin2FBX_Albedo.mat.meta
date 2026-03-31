@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5be21c18fa3d1504fb4a6707dee03f91
+timeCreated: 1479481623
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 76412
+  packageName: Coffin Royale
+  packageVersion: 1.0
+  assetPath: Assets/Coffin_Royale/Materials/Coffin2FBX_Albedo.mat
+  uploadId: 147164

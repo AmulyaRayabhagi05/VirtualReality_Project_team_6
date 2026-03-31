@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 93e5e9c92cab6fe42840383e76ccb14f
+timeCreated: 1479127268
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 76412
+  packageName: Coffin Royale
+  packageVersion: 1.0
+  assetPath: Assets/Coffin_Royale/Materials/WoodBlack.mat
+  uploadId: 147164
