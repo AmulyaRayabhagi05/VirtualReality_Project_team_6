@@ -1,21 +1,13 @@
 using System;
 using UnityEngine;
 
-/// <summary>
-/// Handles microphone recording and converts the result to a WAV byte array
-/// ready to POST to the Whisper API.
-/// 
-/// Usage:
-///   AudioRecorder.Instance.StartRecording();
-///   AudioRecorder.Instance.StopRecording(out byte[] wav);
-/// </summary>
 public class AudioRecorder : MonoBehaviour
 {
     public static AudioRecorder Instance { get; private set; }
 
     [Header("Recording settings")]
-    public int sampleRate    = 16000;   // Whisper works best at 16 kHz
-    public int maxDuration   = 30;      // seconds — safety cap
+    public int sampleRate    = 16000;  
+    public int maxDuration   = 30;  
 
     private AudioClip _clip;
     private bool      _isRecording;
@@ -27,7 +19,6 @@ public class AudioRecorder : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Pick the first available microphone
         if (Microphone.devices.Length > 0)
             _device = Microphone.devices[0];
         else
@@ -36,7 +27,6 @@ public class AudioRecorder : MonoBehaviour
 
     public bool IsRecording => _isRecording;
 
-    /// <summary>Start capturing from the microphone.</summary>
     public void StartRecording()
     {
         if (_isRecording || _device == null) return;
@@ -45,10 +35,6 @@ public class AudioRecorder : MonoBehaviour
         Debug.Log("[AudioRecorder] Recording started");
     }
 
-    /// <summary>
-    /// Stop recording and return the captured audio as a WAV byte array.
-    /// Returns null if nothing was recorded.
-    /// </summary>
     public byte[] StopRecording()
     {
         if (!_isRecording || _device == null) return null;
@@ -63,7 +49,6 @@ public class AudioRecorder : MonoBehaviour
             return null;
         }
 
-        // Trim the clip to the actual recorded length
         float[] samples = new float[position * _clip.channels];
         _clip.GetData(samples, 0);
 
@@ -72,14 +57,11 @@ public class AudioRecorder : MonoBehaviour
         return wav;
     }
 
-    // ── WAV encoder ──────────────────────────────────────────────────────────
-    // Produces a standard PCM 16-bit WAV file in memory.
-
     private static byte[] EncodeWAV(float[] samples, int channels, int hz)
     {
         int sampleCount  = samples.Length;
-        int byteCount    = sampleCount * 2;          // 16-bit = 2 bytes per sample
-        byte[] wav       = new byte[44 + byteCount]; // 44-byte WAV header
+        int byteCount    = sampleCount * 2;         
+        byte[] wav       = new byte[44 + byteCount]; 
 
         // RIFF header
         WriteString(wav,  0, "RIFF");

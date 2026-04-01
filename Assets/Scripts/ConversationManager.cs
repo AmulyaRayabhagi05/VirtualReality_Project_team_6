@@ -4,35 +4,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 using TMPro;
-
-/// <summary>
-/// Singleton that drives all NPC conversations in VR.
-///
-/// Input: Unity Legacy Input Manager — no Input System package required.
-/// Add these entries in Edit → Project Settings → Input Manager (Type: Key or Mouse Button):
-///
-///   Name            Positive Button
-///   ──────────────  ───────────────
-///   VR_Button_A     joystick button 10
-///   VR_Button_B     joystick button 5
-///   VR_Button_X     joystick button 2
-///   VR_Button_Y     joystick button 3
-///   VR_Button_OK    joystick button 7
-///
-/// Push-to-talk: hold A (js10) — the same button on either controller.
-/// The OK button (js7) ends the active conversation from the controller
-/// without needing to reach the world-space panel.
-///
-/// Pipeline per turn:
-///   Hold A → mic records → release A
-///   → Whisper STT → DeepSeek chat → OpenAI TTS → NPC AudioSource plays reply
-///
-/// NPC switching:
-///   StartConversation(newNPC) automatically ends any active conversation first.
-/// </summary>
 public class ConversationManager : MonoBehaviour
 {
-    // ── Singleton ─────────────────────────────────────────────────────────────
     public static ConversationManager Instance { get; private set; }
 
     private void Awake()
@@ -42,52 +15,42 @@ public class ConversationManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // ── API Keys ───────────────────────────────────────────────────────────────
     [Header("API Keys — never commit to source control!")]
     public string openAIKey   = "YOUR_OPENAI_API_KEY";
     public string deepSeekKey = "YOUR_DEEPSEEK_API_KEY";
 
-    // ── Endpoints ──────────────────────────────────────────────────────────────
     private const string WHISPER_URL    = "https://api.openai.com/v1/audio/transcriptions";
     private const string DEEPSEEK_URL   = "https://api.deepseek.com/chat/completions";
     private const string TTS_URL        = "https://api.openai.com/v1/audio/speech";
     private const string DEEPSEEK_MODEL = "deepseek-chat";
     private const string TTS_MODEL      = "tts-1";
 
-    // ── TTS Voice ──────────────────────────────────────────────────────────────
     [Header("TTS Voice")]
     [Tooltip("OpenAI voice: alloy, echo, fable, onyx, nova, shimmer")]
     public string ttsVoice = "onyx";
 
-    // ── Input Manager axis names ───────────────────────────────────────────────
-    // Change these only if you named your Input Manager entries differently.
     [Header("Input Manager Axis Names")]
-    public string axisA  = "js10";    // js10 — push-to-talk (hold)
-    public string axisB  = "js5";    // js5
-    public string axisX  = "js2";    // js2
-    public string axisY  = "js3";    // js3
-    public string axisOK = "js7";   // js7 — end conversation from controller
+    public string axisA  = "js10"; 
+    public string axisB  = "js5";  
+    public string axisX  = "js2"; 
+    public string axisY  = "js3"; 
+    public string axisOK = "js7";
 
-    // ── Settings ───────────────────────────────────────────────────────────────
     [Header("Settings")]
     public int maxHistoryTurns = 10;
 
-    // ── Private state ──────────────────────────────────────────────────────────
     private NPCInteractable   _activeNPC;
     private List<ChatMessage> _history = new();
     private bool              _isPipelineRunning;
-    private bool              _isRecording;   // tracks whether we started a recording this press
+    private bool              _isRecording; 
 
-    // ── Update — Input Manager polling ────────────────────────────────────────
 
     private void Update()
     {
         if (_activeNPC == null) return;
 
-        // ── Push-to-talk (A button, js10) ─────────────────────────────────────
         if (!_isPipelineRunning)
         {
-            // Button pressed — start recording
             if (Input.GetButtonDown(axisA) || Input.GetKeyDown(KeyCode.A))
             {
                 AudioRecorder.Instance?.StartRecording();
@@ -95,7 +58,6 @@ public class ConversationManager : MonoBehaviour
                 _activeNPC.SetStatus("Listening...");
             }
 
-            // Button released — send audio through pipeline
             if ((Input.GetButtonUp(axisA)  || Input.GetKeyUp(KeyCode.A)) && _isRecording)
             {
                 _isRecording = false;
@@ -112,26 +74,12 @@ public class ConversationManager : MonoBehaviour
             }
         }
 
-        // ── OK button (js7) — end conversation from controller ─────────────────
         if (Input.GetButtonDown(axisOK)  || Input.GetKeyDown(KeyCode.O))
         {
             EndConversation();
         }
-
-        // ── B / X / Y are free for your own game logic ─────────────────────────
-        // Example hooks — wire these up as needed:
-        // if (Input.GetButtonDown(axisB)) { ... }
-        // if (Input.GetButtonDown(axisX)) { ... }
-        // if (Input.GetButtonDown(axisY)) { ... }
     }
 
-    // ── Public API ─────────────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Start a conversation with the given NPC.
-    /// Automatically ends any currently active conversation first.
-    /// Called from NPCInteractable.OnStartPressed().
-    /// </summary>
     public void StartConversation(NPCInteractable npc)
     {
         if (npc == null) return;
@@ -151,23 +99,16 @@ public class ConversationManager : MonoBehaviour
         Debug.Log($"[ConversationManager] Conversation started with {npc.npcName}");
     }
 
-    /// <summary>
-    /// End the active conversation.
-    /// Called from NPCInteractable.OnEndPressed() or the OK button.
-    /// </summary>
     public void EndConversation()
     {
         if (_activeNPC == null) return;
         TerminateActiveConversation();
     }
 
-    // ── Pipeline ───────────────────────────────────────────────────────────────
-
     private IEnumerator RunPipeline(byte[] wavBytes)
     {
         NPCInteractable npc = _activeNPC;
 
-        // Step 1 — Whisper STT
         npc.SetStatus("Transcribing...");
         string userText = null;
         yield return StartCoroutine(TranscribeAudio(wavBytes, r => userText = r));
@@ -183,7 +124,6 @@ public class ConversationManager : MonoBehaviour
         _history.Add(new ChatMessage("user", userText));
         Debug.Log($"[STT] {npc.npcName} heard: {userText}");
 
-        // Step 2 — DeepSeek chat
         npc.SetStatus("Thinking...");
         string replyText = null;
         yield return StartCoroutine(GetDeepSeekReply(npc.systemPrompt, r => replyText = r));
@@ -198,7 +138,6 @@ public class ConversationManager : MonoBehaviour
         _history.Add(new ChatMessage("assistant", replyText));
         Debug.Log($"[DeepSeek] {npc.npcName} replied: {replyText}");
 
-        // Step 3 — OpenAI TTS
         npc.SetStatus("Speaking...");
         AudioClip speech = null;
         yield return StartCoroutine(SynthesizeSpeech(replyText, c => speech = c));
@@ -221,8 +160,6 @@ public class ConversationManager : MonoBehaviour
         }
     }
 
-    // ── Whisper STT ────────────────────────────────────────────────────────────
-
     private IEnumerator TranscribeAudio(byte[] wavBytes, System.Action<string> callback)
     {
         var form = new WWWForm();
@@ -242,8 +179,6 @@ public class ConversationManager : MonoBehaviour
             callback(null);
         }
     }
-
-    // ── DeepSeek chat ──────────────────────────────────────────────────────────
 
     private IEnumerator GetDeepSeekReply(string systemPrompt, System.Action<string> callback)
     {
@@ -269,8 +204,6 @@ public class ConversationManager : MonoBehaviour
         }
     }
 
-    // ── OpenAI TTS ─────────────────────────────────────────────────────────────
-
     private IEnumerator SynthesizeSpeech(string text, System.Action<AudioClip> callback)
     {
         string json = "{\"model\":\"" + TTS_MODEL + "\","
@@ -294,8 +227,6 @@ public class ConversationManager : MonoBehaviour
         }
     }
 
-    // ── Internal ───────────────────────────────────────────────────────────────
-
     private void TerminateActiveConversation()
     {
         if (_activeNPC == null) return;
@@ -304,7 +235,6 @@ public class ConversationManager : MonoBehaviour
         _isRecording = false;
         _history.Clear();
 
-        // Stop any in-progress mic recording — discard audio
         if (AudioRecorder.Instance != null && AudioRecorder.Instance.IsRecording)
             AudioRecorder.Instance.StopRecording();
 
@@ -315,8 +245,6 @@ public class ConversationManager : MonoBehaviour
         _activeNPC = null;
         Debug.Log("[ConversationManager] Conversation terminated");
     }
-
-    // ── JSON helpers ───────────────────────────────────────────────────────────
 
     private static string BuildChatJson(List<ChatMessage> messages)
     {

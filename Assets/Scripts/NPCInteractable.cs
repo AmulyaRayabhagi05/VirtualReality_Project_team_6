@@ -1,17 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-/// <summary>
-/// Attach to each NPC GameObject.
-///
-/// Each NPC owns its own:
-///   - System prompt  (personality)
-///   - AudioSource    (voice comes from this NPC's position — positional 3D audio)
-///   - World-space UI panel with Start / End buttons
-///
-/// NPC switching is automatic: starting a conversation on this NPC cleanly ends
-/// any conversation that is already active on a different NPC.
-/// </summary>
 public class NPCInteractable : MonoBehaviour
 {
     [Header("NPC Identity")]
@@ -31,9 +20,9 @@ public class NPCInteractable : MonoBehaviour
     [Header("World-space UI Panel")]
     [Tooltip("Root GameObject of the floating panel — shown when player is within range")]
     public GameObject  conversationPanel;
-    public TMP_Text    npcNameLabel;     // NPC name displayed at top of panel
-    public TMP_Text    statusLabel;      // "Hold A to speak", "Listening…", etc.
-    public TMP_Text    transcriptLabel;  // optional — shows Whisper transcript
+    public TMP_Text    npcNameLabel;   
+    public TMP_Text    statusLabel;    
+    public TMP_Text    transcriptLabel;  
     public UnityEngine.UI.Button startButton;
     public UnityEngine.UI.Button endButton;
 
@@ -42,8 +31,6 @@ public class NPCInteractable : MonoBehaviour
     public float panelVisibleRange = 4f;
 
     private Transform _playerHead;
-
-    // ── Unity lifecycle ───────────────────────────────────────────────────────
 
     private void Start()
     {
@@ -63,9 +50,6 @@ public class NPCInteractable : MonoBehaviour
         BillboardPanel();
     }
 
-    // ── Button handlers ───────────────────────────────────────────────────────
-
-    /// <summary>Called by the Start button on the world-space panel.</summary>
     public void OnStartPressed()
     {
         if (ConversationManager.Instance == null)
@@ -73,19 +57,14 @@ public class NPCInteractable : MonoBehaviour
             Debug.LogError("[NPCInteractable] ConversationManager not found in scene!");
             return;
         }
-        // ConversationManager.StartConversation handles ending any previous NPC
         ConversationManager.Instance.StartConversation(this);
     }
 
-    /// <summary>Called by the End button on the world-space panel.</summary>
     public void OnEndPressed()
     {
         ConversationManager.Instance?.EndConversation();
     }
 
-    // ── Called by ConversationManager ─────────────────────────────────────────
-
-    /// <summary>ConversationManager calls this when this NPC becomes active.</summary>
     public void OnBecomeActive()
     {
         if (startButton != null) startButton.interactable = false;
@@ -95,13 +74,10 @@ public class NPCInteractable : MonoBehaviour
         if (transcriptLabel != null) transcriptLabel.text = "";
     }
 
-    /// <summary>ConversationManager calls this when this NPC's conversation ends.</summary>
     public void OnBecomeInactive()
     {
         SetIdleState();
     }
-
-    // ── Status helpers (called by ConversationManager) ────────────────────────
 
     public void SetStatus(string msg)
     {
@@ -112,8 +88,6 @@ public class NPCInteractable : MonoBehaviour
     {
         if (transcriptLabel != null) transcriptLabel.text = msg;
     }
-
-    // ── Private helpers ───────────────────────────────────────────────────────
 
     private void SetIdleState()
     {
@@ -133,7 +107,6 @@ public class NPCInteractable : MonoBehaviour
             conversationPanel.SetActive(show);
     }
 
-    /// <summary>Keep the panel facing the player at all times.</summary>
     private void BillboardPanel()
     {
         if (conversationPanel == null || !conversationPanel.activeSelf || _playerHead == null) return;
