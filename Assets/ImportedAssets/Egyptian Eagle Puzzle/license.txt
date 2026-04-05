@@ -1,0 +1,11 @@
+Model Information:
+* title:	Egyptian Eagle Puzzle
+* source:	https://sketchfab.com/3d-models/egyptian-eagle-puzzle-033ba2390fae4ec49eb8b3f8feb15078
+* author:	Andres Piroso (https://sketchfab.com/andrespiroso)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Egyptian Eagle Puzzle" (https://sketchfab.com/3d-models/egyptian-eagle-puzzle-033ba2390fae4ec49eb8b3f8feb15078) by Andres Piroso (https://sketchfab.com/andrespiroso) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
