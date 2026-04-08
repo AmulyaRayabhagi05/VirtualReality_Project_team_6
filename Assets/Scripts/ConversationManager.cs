@@ -15,7 +15,6 @@ public class ConversationManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    [Header("API Keys — never commit to source control!")]
     public string openAIKey   = "YOUR_OPENAI_API_KEY";
     public string deepSeekKey = "YOUR_DEEPSEEK_API_KEY";
 
@@ -25,18 +24,14 @@ public class ConversationManager : MonoBehaviour
     private const string DEEPSEEK_MODEL = "deepseek-chat";
     private const string TTS_MODEL      = "tts-1";
 
-    [Header("TTS Voice")]
-    [Tooltip("OpenAI voice: alloy, echo, fable, onyx, nova, shimmer")]
     public string ttsVoice = "onyx";
 
-    [Header("Input Manager Axis Names")]
     public string axisA  = "js10"; 
     public string axisB  = "js5";  
     public string axisX  = "js2"; 
     public string axisY  = "js3"; 
     public string axisOK = "js7";
 
-    [Header("Settings")]
     public int maxHistoryTurns = 10;
 
     private NPCInteractable   _activeNPC;
