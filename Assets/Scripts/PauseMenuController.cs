@@ -12,6 +12,7 @@ public class PauseMenuController : MonoBehaviour
     public Button settingsButton;
     public float stickThreshold = 0.5f;
     public float navigationCooldown = 0.3f;
+    public CharacterMovement characterMovement;
 
     private int _selectedIndex = 0;
     private const int OPTION_COUNT = 2;
@@ -38,17 +39,10 @@ public class PauseMenuController : MonoBehaviour
         HandleNavigation();
         HandleConfirm();
     }
-    
-    public void TogglePause()
-    {
-        if (menuCanvas.gameObject.activeSelf)
-            ResumeGame();
-        else
-            PauseGame();
-    }
-    
+
     public void PauseGame()
     {
+        if (characterMovement != null) characterMovement.enabled = false;
         PositionMenuInFrontOfPlayer();
         menuCanvas.gameObject.SetActive(true);
         ShowPausePanel();
@@ -57,6 +51,9 @@ public class PauseMenuController : MonoBehaviour
 
     public void ResumeGame()
     {
+        if (characterMovement != null) characterMovement.enabled = true;
+        _stickNeutral = true;
+        _cooldownTimer = 0f;
         menuCanvas.gameObject.SetActive(false);
         Time.timeScale = 1f;
     }
@@ -85,7 +82,8 @@ public class PauseMenuController : MonoBehaviour
 
         if (!_stickNeutral || _cooldownTimer > 0f) return;
 
-        if (axis < -stickThreshold)
+        // Up (positive) = previous option, Down (negative) = next option
+        if (axis > stickThreshold)
             _selectedIndex = (_selectedIndex - 1 + OPTION_COUNT) % OPTION_COUNT;
         else
             _selectedIndex = (_selectedIndex + 1) % OPTION_COUNT;
