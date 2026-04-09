@@ -15200,7 +15200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83a13d6d192c39143b9b95ad97aa5695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PressButtonController
-  dinoController: {fileID: 0}
+  dinoController: {fileID: 879669303}
   buttonText: {fileID: 823035827}
   normalColor: {r: 0.7411765, g: 0.5764706, b: 0.38039216, a: 1}
   pressedColor: {r: 0.7411765, g: 0.5764706, b: 0.38039216, a: 1}
