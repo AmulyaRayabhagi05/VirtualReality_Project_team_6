@@ -4232,9 +4232,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 492926559}
-  m_Layer: 0
-  m_Name: hand.l.1
+  - component: {fileID: 484775222}
+  - component: {fileID: 484775221}
+  - component: {fileID: 484775220}
+  m_Layer: 5
+  m_Name: ACTION TEXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16798,7 +16800,6 @@ SceneRoots:
   - {fileID: 1750836837}
   - {fileID: 1232552255}
   - {fileID: 449095844}
-  - {fileID: 3638473}
   - {fileID: 1940952163}
   - {fileID: 664081639}
   - {fileID: 257284887}
