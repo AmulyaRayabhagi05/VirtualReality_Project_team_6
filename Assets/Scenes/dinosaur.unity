@@ -4232,9 +4232,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 484775222}
-  - component: {fileID: 484775221}
-  - component: {fileID: 484775220}
+  - component: {fileID: 492926559}
   m_Layer: 5
   m_Name: ACTION TEXT
   m_TagString: Untagged
@@ -8132,7 +8130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc057b7a36c74844b88f1cb7a6c185f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConversationManager
-  openAIKey: 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
   deepSeekKey: sk-5e2ce095b81a4a778f8f6753afa59982
   ttsVoice: onyx
   axisA: js10
@@ -16825,3 +16822,4 @@ SceneRoots:
   - {fileID: 879669307}
   - {fileID: 455410648}
   - {fileID: 105011484}
+  - {fileID: 3638473}
