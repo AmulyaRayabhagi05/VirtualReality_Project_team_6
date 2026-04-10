@@ -10911,6 +10911,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc1ae413c1be9b40ade6253e39620c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 5
   cameraObj: {fileID: 370992781}
   joyStickMode: 0
 --- !u!143 &1369664151
@@ -16579,7 +16580,7 @@ MonoBehaviour:
   maxHeight: 0.3
   verticalJitter: 0.03
   horizontalJitter: 0.025
-  dirtMaterial: {fileID: 2100000, guid: d9f3d0692b6a42b42987094f4c950ebe, type: 2}
+  dirtMaterial: {fileID: 2100000, guid: d4f99126098d24879ae564a6c6755889, type: 2}
   generateOnStart: 1
 --- !u!1 &2143769380
 GameObject:
