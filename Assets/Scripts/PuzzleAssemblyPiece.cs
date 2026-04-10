@@ -19,6 +19,7 @@ public class PuzzleAssemblyPiece : MonoBehaviour, IPointerClickHandler
     private bool _isPlaced;
     private Quaternion _holdRotationOffset = Quaternion.identity;
     private Quaternion _additionalHoldRotation = Quaternion.identity;
+    private static readonly Quaternion PickupRotationOffset = Quaternion.Euler(-90f, 0f, 0f);
 
     public bool IsPlaced
     {
@@ -90,7 +91,7 @@ public class PuzzleAssemblyPiece : MonoBehaviour, IPointerClickHandler
     {
         _isHeld = true;
         Debug.LogWarning($"[PuzzleAssemblyPiece] BeginHold {pieceId}");
-        _holdRotationOffset = transform.rotation;
+        _holdRotationOffset = PickupRotationOffset;
         _additionalHoldRotation = Quaternion.identity;
 
         if (_rigidbody != null)
