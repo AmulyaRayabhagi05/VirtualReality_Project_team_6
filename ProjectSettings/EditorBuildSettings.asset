@@ -8,9 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Assignment1.unity
     guid: 7a4abb9bb506aa54899260d1432f0700
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Assignment2.unity
     guid: 1b3ea71e099c7d942939161ed3525628
+  - enabled: 0
+    path: Assets/Scenes/Conversation.unity
+    guid: c79cc80de6ed1cd4a83e46896bdd33ed
+  - enabled: 1
+    path: Assets/Scenes/dinosaur.unity
+    guid: 05bfadebef392394ca2024518e8b093c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4d39da985f0e6dd498b5a029be5f7a16, type: 2}
