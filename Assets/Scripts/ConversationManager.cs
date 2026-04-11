@@ -26,7 +26,7 @@ public class ConversationManager : MonoBehaviour
 
     public string ttsVoice = "onyx";
 
-    public string axisA  = "js10"; 
+    public string axisA  = "js3"; 
     public string axisB  = "js5";  
     public string axisX  = "js2"; 
     public string axisY  = "js3"; 
@@ -46,14 +46,14 @@ public class ConversationManager : MonoBehaviour
 
         if (!_isPipelineRunning)
         {
-            if (Input.GetButtonDown(axisA) || Input.GetKeyDown(KeyCode.A))
+            if (Input.GetButtonDown(axisA) || Input.GetKeyDown(KeyCode.H))
             {
                 AudioRecorder.Instance?.StartRecording();
                 _isRecording = true;
                 _activeNPC.SetStatus("Listening...");
             }
 
-            if ((Input.GetButtonUp(axisA)  || Input.GetKeyUp(KeyCode.A)) && _isRecording)
+            if ((Input.GetButtonUp(axisA)  || Input.GetKeyUp(KeyCode.H)) && _isRecording)
             {
                 _isRecording = false;
                 byte[] wav = AudioRecorder.Instance?.StopRecording();
@@ -64,7 +64,7 @@ public class ConversationManager : MonoBehaviour
                 }
                 else
                 {
-                    _activeNPC.SetStatus("Hold A to speak");
+                    _activeNPC.SetStatus("Hold H or js3 to speak");
                 }
             }
         }
@@ -150,7 +150,7 @@ public class ConversationManager : MonoBehaviour
 
         if (_activeNPC == npc)
         {
-            npc.SetStatus("Hold A to speak");
+            npc.SetStatus("Hold H or js3 to speak");
             _isPipelineRunning = false;
         }
     }
