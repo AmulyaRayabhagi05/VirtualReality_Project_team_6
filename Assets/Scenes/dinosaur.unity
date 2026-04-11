@@ -1834,7 +1834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a3a1737ae955e41b2396930e06de6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VRPauseButton
-  pauseMenuController: {fileID: 0}
+  pauseMenuController: {fileID: 2055684868}
 --- !u!114 &128019329
 MonoBehaviour:
   m_ObjectHideFlags: 0
