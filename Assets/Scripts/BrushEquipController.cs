@@ -13,17 +13,25 @@ public class BrushEquipController : MonoBehaviour
     [SerializeField] private Vector3 equippedLocalPosition = new Vector3(0f, -0.12f, 0.5f);
     [SerializeField] private Vector3 equippedLocalEulerAngles = new Vector3(-40f, 120f, 15f);
     [SerializeField] private float dropDistance = 1.25f;
-    [SerializeField] private float dropHeightOffset = 0.15f;
+    [SerializeField] private float dropHeightOffset = 0.1f;
     [SerializeField] private bool startEquipped;
+    [SerializeField] private bool debugReticleTargeting;
 
     private readonly List<GameObject> _reticleObjects = new List<GameObject>();
     private readonly List<ReticleJoystickClick> _reticleClickers = new List<ReticleJoystickClick>();
     private Renderer[] _brushRenderers;
+    private Collider[] _brushColliders;
     private bool _isEquipped;
+    private string _lastHitName;
 
     public bool IsEquipped
     {
         get { return _isEquipped; }
+    }
+
+    public Ray GetCurrentReticleRay()
+    {
+        return new Ray(sourceCamera.transform.position, sourceCamera.transform.forward);
     }
 
     private void Awake()
@@ -36,6 +44,7 @@ public class BrushEquipController : MonoBehaviour
         if (brushTransform != null)
         {
             _brushRenderers = brushTransform.GetComponentsInChildren<Renderer>(true);
+            _brushColliders = brushTransform.GetComponentsInChildren<Collider>(true);
         }
 
         CacheReticleObjects();
@@ -76,13 +85,22 @@ public class BrushEquipController : MonoBehaviour
         {
             if (pickupPressed)
             {
+                LogDebug("Pickup input detected while equipped. Dropping brush.");
                 DropBrush();
             }
 
             return;
         }
 
-        if (pickupPressed && IsBrushTargeted())
+        TraceCurrentReticleHit();
+
+        bool isTargeted = IsBrushTargeted();
+        if (pickupPressed)
+        {
+            LogDebug(isTargeted ? "Pickup input detected while targeting brush." : "Pickup input detected, but brush is not targeted.");
+        }
+
+        if (pickupPressed && isTargeted)
         {
             EquipBrush();
         }
@@ -90,40 +108,44 @@ public class BrushEquipController : MonoBehaviour
 
     private bool IsBrushTargeted()
     {
-        if (_brushRenderers == null || _brushRenderers.Length == 0)
+        Collider[] colliders = _brushColliders ?? brushTransform.GetComponentsInChildren<Collider>(true);
+        if (colliders == null || colliders.Length == 0)
+        {
+            LogDebug("Brush has no colliders to raycast against.");
+            return false;
+        }
+
+        float maxDistance = RaycastPointer.instance != null ? RaycastPointer.instance.raycastLength : pickupRange;
+        Ray ray = GetCurrentReticleRay();
+        if (!Physics.Raycast(ray, out RaycastHit hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
         {
             return false;
         }
 
-        Bounds bounds = _brushRenderers[0].bounds;
-        for (int i = 1; i < _brushRenderers.Length; i++)
+        for (int i = 0; i < colliders.Length; i++)
         {
-            bounds.Encapsulate(_brushRenderers[i].bounds);
+            Collider collider = colliders[i];
+            if (collider == null)
+            {
+                continue;
+            }
+
+            if (hit.collider == collider || hit.collider.transform.IsChildOf(brushTransform))
+            {
+                return true;
+            }
         }
 
-        Vector3 center = bounds.center;
-        float distance = Vector3.Distance(sourceCamera.transform.position, center);
-        if (distance > pickupRange)
-        {
-            return false;
-        }
-
-        Vector3 screenPoint = sourceCamera.WorldToScreenPoint(center);
-        if (screenPoint.z <= 0f)
-        {
-            return false;
-        }
-
-        Vector2 viewportCenter = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-        Vector2 screenPosition = new Vector2(screenPoint.x, screenPoint.y);
-        return Vector2.Distance(viewportCenter, screenPosition) <= reticleThresholdPixels;
+        return false;
     }
 
     private void EquipBrush()
     {
+        LogDebug("Equipping brush.");
         brushTransform.SetParent(brushAnchor, false);
         brushTransform.localPosition = equippedLocalPosition;
         brushTransform.localRotation = Quaternion.Euler(equippedLocalEulerAngles);
+        SetBrushCollidersEnabled(false);
         _isEquipped = true;
         SetReticleState(false);
     }
@@ -139,9 +161,9 @@ public class BrushEquipController : MonoBehaviour
         }
 
         forward.Normalize();
-        Vector3 dropPosition = cameraTransform.position + (forward * dropDistance);
+        Vector3 dropPosition = brushTransform.position;
 
-        if (Physics.Raycast(dropPosition + Vector3.up, Vector3.down, out RaycastHit hit, 5f, ~0, QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(dropPosition + Vector3.up, Vector3.down, out RaycastHit hit, 20f, ~0, QueryTriggerInteraction.Ignore))
         {
             dropPosition.y = hit.point.y + dropHeightOffset;
         }
@@ -149,8 +171,33 @@ public class BrushEquipController : MonoBehaviour
         brushTransform.SetParent(null, true);
         brushTransform.position = dropPosition;
         brushTransform.rotation = Quaternion.LookRotation(forward, Vector3.up);
+        SetBrushCollidersEnabled(true);
         _isEquipped = false;
+        _lastHitName = null;
         SetReticleState(true);
+    }
+
+    private void TraceCurrentReticleHit()
+    {
+        float maxDistance = RaycastPointer.instance != null ? RaycastPointer.instance.raycastLength : pickupRange;
+        Ray ray = GetCurrentReticleRay();
+        string currentHitName = "nothing";
+        float currentHitDistance = -1f;
+        if (Physics.Raycast(ray, out RaycastHit hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
+        {
+            currentHitName = hit.collider != null ? hit.collider.name : "unnamed collider";
+            currentHitDistance = hit.distance;
+        }
+
+        if (currentHitName == _lastHitName)
+        {
+            return;
+        }
+
+        _lastHitName = currentHitName;
+        LogDebug(currentHitDistance >= 0f
+            ? $"Reticle hit: {currentHitName} at {currentHitDistance:F2}m"
+            : "Reticle hit: nothing");
     }
 
     private void CacheReticleObjects()
@@ -198,5 +245,31 @@ public class BrushEquipController : MonoBehaviour
                 _reticleClickers[i].enabled = isVisible;
             }
         }
+    }
+
+    private void SetBrushCollidersEnabled(bool isEnabled)
+    {
+        if (_brushColliders == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _brushColliders.Length; i++)
+        {
+            if (_brushColliders[i] != null)
+            {
+                _brushColliders[i].enabled = isEnabled;
+            }
+        }
+    }
+
+    private void LogDebug(string message)
+    {
+        if (!debugReticleTargeting)
+        {
+            return;
+        }
+
+        Debug.Log($"[BrushEquipController] {message}", this);
     }
 }

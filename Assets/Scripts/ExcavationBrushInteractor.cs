@@ -9,6 +9,7 @@ public class ExcavationBrushInteractor : MonoBehaviour
     [SerializeField] private float range = 6f;
     [SerializeField] private float brushRadius = 0.28f;
     [SerializeField] private LayerMask hitMask = ~0;
+    [SerializeField] private bool debugExcavation;
 
     private void Awake()
     {
@@ -31,19 +32,36 @@ public class ExcavationBrushInteractor : MonoBehaviour
             return;
         }
 
-        Ray centerProbe = new Ray(sourceCamera.transform.position, sourceCamera.transform.forward);
+        LogDebug("Excavate input detected while brush is equipped.");
+
+        Ray centerProbe = brushEquipController.GetCurrentReticleRay();
         RaycastHit hit;
-        if (!Physics.SphereCast(centerProbe, brushRadius, out hit, range, hitMask, QueryTriggerInteraction.Ignore))
+        float castRange = RaycastPointer.instance != null ? RaycastPointer.instance.raycastLength : range;
+        if (!Physics.SphereCast(centerProbe, brushRadius, out hit, castRange, hitMask, QueryTriggerInteraction.Ignore))
         {
+            LogDebug("Excavation spherecast hit nothing.");
             return;
         }
 
+        LogDebug($"Excavation spherecast hit {hit.collider.name} at {hit.distance:F2}m.");
         ExcavationDirtPile dirtPile = hit.collider.GetComponentInParent<ExcavationDirtPile>();
         if (dirtPile == null)
         {
+            LogDebug("Spherecast hit collider without an ExcavationDirtPile parent.");
             return;
         }
 
+        LogDebug("Excavating via camera-forward spherecast.");
         dirtPile.Excavate(hit.point, brushRadius);
+    }
+
+    private void LogDebug(string message)
+    {
+        if (!debugExcavation)
+        {
+            return;
+        }
+
+        Debug.Log($"[ExcavationBrushInteractor] {message}", this);
     }
 }

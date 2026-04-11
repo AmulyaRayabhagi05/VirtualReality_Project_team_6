@@ -14,9 +14,11 @@ public class RaycastPointer : MonoBehaviour
 
     [Header("Raycast")]
     [HideInInspector] public float raycastLength = 10f;
+    public bool debugReticleHits;
 
     private LineRenderer lineRenderer;
     private Transform currentHighlight;      
+    private string lastHitName;
 
     private bool xWasPressed = false;
     private bool aWasPressed = false;
@@ -50,9 +52,17 @@ public class RaycastPointer : MonoBehaviour
     {
         instance = this;
         lineRenderer = GetComponent<LineRenderer>();
+        if (lineRenderer == null)
+        {
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+        }
+
         lineRenderer.positionCount = 2;
         lineRenderer.widthMultiplier = 0.02f;
         lineRenderer.useWorldSpace = true;
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.startColor = Color.cyan;
+        lineRenderer.endColor = Color.cyan;
     }
 
     void Update()
@@ -75,6 +85,7 @@ public class RaycastPointer : MonoBehaviour
 
         RaycastHit hit;
         bool didHit = Physics.Raycast(origin, direction, out hit, raycastLength);
+        TraceReticleHit(didHit, hit);
 
         HandleHighlight(didHit, hit);
 
@@ -152,6 +163,27 @@ public class RaycastPointer : MonoBehaviour
             if (o != null) o.enabled = false;
             currentHighlight = null;
         }
+    }
+
+    void TraceReticleHit(bool didHit, RaycastHit hit)
+    {
+        if (!debugReticleHits)
+        {
+            return;
+        }
+
+        string currentHitName = didHit && hit.collider != null ? hit.collider.name : "nothing";
+        if (currentHitName == lastHitName)
+        {
+            return;
+        }
+
+        lastHitName = currentHitName;
+        Debug.Log(
+            didHit && hit.collider != null
+                ? $"[RaycastPointer] Reticle hit: {currentHitName} at {hit.distance:F2}m"
+                : "[RaycastPointer] Reticle hit: nothing",
+            this);
     }
 
     void TryTeleport(Vector3 origin, Vector3 direction)
