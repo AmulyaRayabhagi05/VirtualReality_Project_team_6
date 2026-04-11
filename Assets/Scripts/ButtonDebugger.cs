@@ -9,7 +9,7 @@ public class ButtonDebugger : MonoBehaviour
     {
         targetButton.onClick.AddListener(() =>
         {
-            Debug.Log("BUTTON WAS CLICKED!");
+            Debug.Log("Button CLicked");
         });
     }
 
@@ -17,7 +17,7 @@ public class ButtonDebugger : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log($"Left click detected at: {Input.mousePosition}");
+            Debug.Log($"Left click at: {Input.mousePosition}");
 
             var pointerData = new UnityEngine.EventSystems.PointerEventData(
                 UnityEngine.EventSystems.EventSystem.current)
@@ -32,10 +32,9 @@ public class ButtonDebugger : MonoBehaviour
             {
                 Debug.Log($"Raycast hit: {r.gameObject.name}");
 
-                // Force click on button
                 if (r.gameObject.name == "Try again button")
                 {
-                    Debug.Log("Forcing button click!");
+                    Debug.Log("button clicking");
                     r.gameObject.GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
                 }
             }
