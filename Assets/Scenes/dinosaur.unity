@@ -189,7 +189,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
-  m_Camera: {fileID: 1026618681}
+  m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -244,7 +244,7 @@ MonoBehaviour:
   settingsButton: {fileID: 298982778}
   stickThreshold: 0.5
   navigationCooldown: 0.3
-  characterMovement: {fileID: 128019326}
+  characterMovement: {fileID: 0}
 --- !u!1 &15666640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1294,6 +1294,7 @@ GameObject:
   - component: {fileID: 128019326}
   - component: {fileID: 128019328}
   - component: {fileID: 128019329}
+  - component: {fileID: 128019330}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -1391,6 +1392,30 @@ MonoBehaviour:
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &128019330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128019324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e967dc7be165496e8046f341ff682fc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BrushEquipController
+  sourceCamera: {fileID: 1026618681}
+  brushTransform: {fileID: 0}
+  brushAnchor: {fileID: 0}
+  pickupButton: js2
+  pickupKey: 101
+  pickupRange: 3
+  reticleThresholdPixels: 120
+  equippedLocalPosition: {x: 0, y: -0.12, z: 0.5}
+  equippedLocalEulerAngles: {x: -40, y: 120, z: 15}
+  dropDistance: 1.25
+  dropHeightOffset: 0.15
+  startEquipped: 0
 --- !u!1 &141344837
 GameObject:
   m_ObjectHideFlags: 0
@@ -9112,7 +9137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7287137019065901088, guid: 186741bf17cbb0e4fa3ef06daa1f190f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 7287137019065901088, guid: 186741bf17cbb0e4fa3ef06daa1f190f, type: 3}
       propertyPath: m_LocalPosition.z
