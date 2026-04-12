@@ -4,29 +4,18 @@ using UnityEngine.SceneManagement;
 
 public class FloorsMenuController : MonoBehaviour
 {
-    [Header("VR Canvas Setup")]
     public Canvas menuCanvas;
-
-    [Tooltip("Offset from the camera when the menu spawns (metres).")]
     public Vector3 spawnOffset = new Vector3(0f, 0f, 1.5f);
-
-    [Tooltip("Lock the menu Y rotation to face the player?")]
     public bool facePlayer = true;
-
-    [Header("Buttons")]
     public Button floorOneButton;
     public Button floorTwoButton;
     public Button closeButton;
 
-    [Header("Player")]
-    [Tooltip("Assign the CharacterMovement component on your player.")]
     public CharacterMovement characterMovement;
 
-    [Header("Joystick Settings")]
     public float stickThreshold = 0.5f;
     public float navigationCooldown = 0.3f;
 
-    // Options: 0 = Floor One, 1 = Floor Two, 2 = Close
     private int _selectedIndex = 0;
     private const int OPTION_COUNT = 3;
 
@@ -38,9 +27,6 @@ public class FloorsMenuController : MonoBehaviour
 
     private Camera _vrCamera;
 
-    // -----------------------------------------------------------------------
-    // Unity lifecycle
-    // -----------------------------------------------------------------------
 
     private void Awake()
     {
@@ -57,13 +43,9 @@ public class FloorsMenuController : MonoBehaviour
         HandleConfirm();
     }
 
-    // -----------------------------------------------------------------------
-    // Public API
-    // -----------------------------------------------------------------------
 
     public void OpenMenu()
     {
-        // Don't open if the pause menu is already open
         if (PauseMenuController.IsPaused) return;
 
         PositionMenuInFrontOfPlayer();
@@ -96,10 +78,6 @@ public class FloorsMenuController : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene("SecondFloor");
     }
-
-    // -----------------------------------------------------------------------
-    // Private - joystick navigation
-    // -----------------------------------------------------------------------
 
     private void HandleNavigation()
     {
@@ -150,9 +128,6 @@ public class FloorsMenuController : MonoBehaviour
         btn.colors = c;
     }
 
-    // -----------------------------------------------------------------------
-    // Private - canvas positioning
-    // -----------------------------------------------------------------------
 
     private void PositionMenuInFrontOfPlayer()
     {
