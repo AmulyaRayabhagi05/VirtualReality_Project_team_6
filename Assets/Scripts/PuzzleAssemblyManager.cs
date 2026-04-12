@@ -148,16 +148,23 @@ public class PuzzleAssemblyManager : MonoBehaviour
             return;
         }
 
+        Ray interactionRay = GetInteractionRay();
         Transform cameraTransform = sourceCamera.transform;
-        Vector3 holdPosition = cameraTransform.position +
-            cameraTransform.forward * holdDistance +
+        Vector3 holdPosition = interactionRay.origin +
+            interactionRay.direction * holdDistance +
             cameraTransform.TransformVector(holdOffset);
 
         if (followReticleToSurface)
         {
-            Ray surfaceRay = new Ray(cameraTransform.position, cameraTransform.forward);
+            Ray surfaceRay = interactionRay;
             RaycastHit surfaceHit;
-            if (Physics.Raycast(surfaceRay, out surfaceHit, placementSurfaceRange, placementSurfaceMask, QueryTriggerInteraction.Ignore))
+            float surfaceRange = placementSurfaceRange;
+            if (RaycastPointer.instance != null)
+            {
+                surfaceRange = Mathf.Max(surfaceRange, RaycastPointer.instance.raycastLength);
+            }
+
+            if (Physics.Raycast(surfaceRay, out surfaceHit, surfaceRange, placementSurfaceMask, QueryTriggerInteraction.Ignore))
             {
                 holdPosition = surfaceHit.point;
             }
@@ -178,9 +185,10 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
     private void TryHandlePickupInput()
     {
-        Ray ray = new Ray(sourceCamera.transform.position, sourceCamera.transform.forward);
+        Ray ray = GetInteractionRay();
+        float rayLength = GetInteractionRayLength();
         RaycastHit hit;
-        if (!Physics.Raycast(ray, out hit, pickupRange, pickupMask, QueryTriggerInteraction.Ignore))
+        if (!Physics.Raycast(ray, out hit, rayLength, pickupMask, QueryTriggerInteraction.Ignore))
         {
             LogDebug("Pickup ray hit nothing.");
             return;
@@ -203,6 +211,26 @@ public class PuzzleAssemblyManager : MonoBehaviour
     private bool IsPickupPressed()
     {
         return Input.GetButtonDown(pickupButton) || Input.GetKeyDown(pickupKey);
+    }
+
+    private Ray GetInteractionRay()
+    {
+        if (RaycastPointer.instance != null)
+        {
+            return RaycastPointer.instance.GetRay();
+        }
+
+        return new Ray(sourceCamera.transform.position, sourceCamera.transform.forward);
+    }
+
+    private float GetInteractionRayLength()
+    {
+        if (RaycastPointer.instance != null)
+        {
+            return Mathf.Max(pickupRange, RaycastPointer.instance.raycastLength);
+        }
+
+        return pickupRange;
     }
 
     public bool TryPickUp(PuzzleAssemblyPiece piece)

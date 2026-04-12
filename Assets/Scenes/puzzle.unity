@@ -186,7 +186,7 @@ MonoBehaviour:
   holdOffset: {x: 0, y: -0.1, z: 0}
   followReticleToSurface: 0
   lockHeldPieceToPuzzleHeight: 0
-  pickupRange: 6
+  pickupRange: 20
   pickupMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1765,7 +1765,7 @@ MonoBehaviour:
   holdOffset: {x: 0, y: 0, z: 0}
   followReticleToSurface: 0
   lockHeldPieceToPuzzleHeight: 0
-  pickupRange: 6
+  pickupRange: 20
   pickupMask:
     serializedVersion: 2
     m_Bits: 4294967295
