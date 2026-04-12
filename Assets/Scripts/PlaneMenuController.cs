@@ -7,18 +7,13 @@ using UnityEngine.UI;
 
 public class PlaneMenuController : MonoBehaviour
 {
-    [Header("UI")]
     public GameObject menuPanel;
     public Button outsideButton;
     public Button startSimButton;
     public Button closeMenuButton;
-
-    [Header("Player")]
     public GameObject xrCardboardRig;
     public Transform outsideDestination;
     public MonoBehaviour movementScript;
-
-    [Header("Menu Position")]
     public float menuDistance = 2f;
     private CanvasGroup menuPanelGroup;
     private Canvas menuCanvas;

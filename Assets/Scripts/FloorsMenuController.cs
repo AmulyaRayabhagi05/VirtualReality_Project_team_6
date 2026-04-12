@@ -1,23 +1,23 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class PauseMenuController : MonoBehaviour
+public class FloorsMenuController : MonoBehaviour
 {
-    public GameObject pausePanel;
-    public GameObject settingsPanel;
     public Canvas menuCanvas;
     public Vector3 spawnOffset = new Vector3(0f, 0f, 1.5f);
     public bool facePlayer = true;
-    public Button resumeButton;
-    public Button settingsButton;
+    public Button floorOneButton;
+    public Button floorTwoButton;
+    public Button closeButton;
+
+    public CharacterMovement characterMovement;
+
     public float stickThreshold = 0.5f;
     public float navigationCooldown = 0.3f;
-    public CharacterMovement characterMovement;
-    
-    public static bool IsPaused { get; private set; } = false;
 
     private int _selectedIndex = 0;
-    private const int OPTION_COUNT = 2;
+    private const int OPTION_COUNT = 3;
 
     private bool _stickNeutral = true;
     private float _cooldownTimer = 0f;
@@ -27,6 +27,7 @@ public class PauseMenuController : MonoBehaviour
 
     private Camera _vrCamera;
 
+
     private void Awake()
     {
         _vrCamera = Camera.main;
@@ -35,43 +36,47 @@ public class PauseMenuController : MonoBehaviour
 
     private void Update()
     {
-        if (!pausePanel.activeSelf) return;
+        if (!menuCanvas.gameObject.activeSelf) return;
 
         _cooldownTimer -= Time.unscaledDeltaTime;
         HandleNavigation();
         HandleConfirm();
     }
 
-    public void PauseGame()
+
+    public void OpenMenu()
     {
-        IsPaused = true;
-        if (characterMovement != null) characterMovement.enabled = false;
+        if (PauseMenuController.IsPaused) return;
+
         PositionMenuInFrontOfPlayer();
         menuCanvas.gameObject.SetActive(true);
-        ShowPausePanel();
+        if (characterMovement != null) characterMovement.enabled = false;
+
+        _selectedIndex = 0;
+        UpdateHighlight();
+
         Time.timeScale = 0f;
     }
 
-    public void ResumeGame()
+    public void CloseMenu()
     {
-        IsPaused = false;
-        if (characterMovement != null) characterMovement.enabled = true;
         _stickNeutral = true;
         _cooldownTimer = 0f;
         menuCanvas.gameObject.SetActive(false);
+        if (characterMovement != null) characterMovement.enabled = true;
         Time.timeScale = 1f;
     }
 
-    public void OpenSettings()
+    public void LoadFloorOne()
     {
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(true);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("FirstFloor");
     }
 
-    public void BackToPauseMenu()
+    public void LoadFloorTwo()
     {
-        settingsPanel.SetActive(false);
-        ShowPausePanel();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("SecondFloor");
     }
 
     private void HandleNavigation()
@@ -86,7 +91,6 @@ public class PauseMenuController : MonoBehaviour
 
         if (!_stickNeutral || _cooldownTimer > 0f) return;
 
-        // Up (positive) = previous option, Down (negative) = next option
         if (axis > stickThreshold)
             _selectedIndex = (_selectedIndex - 1 + OPTION_COUNT) % OPTION_COUNT;
         else
@@ -94,24 +98,26 @@ public class PauseMenuController : MonoBehaviour
 
         _stickNeutral = false;
         _cooldownTimer = navigationCooldown;
-        UpdatePauseHighlight();
+        UpdateHighlight();
     }
 
     private void HandleConfirm()
     {
-        if (!Input.GetButtonDown("js5")) return;
+        if (!Input.GetKeyDown(KeyCode.JoystickButton5)) return;
 
         switch (_selectedIndex)
         {
-            case 0: ResumeGame();   break;
-            case 1: OpenSettings(); break;
+            case 0: LoadFloorOne(); break;
+            case 1: LoadFloorTwo(); break;
+            case 2: CloseMenu();    break;
         }
     }
 
-    private void UpdatePauseHighlight()
+    private void UpdateHighlight()
     {
-        SetButtonColor(resumeButton,   _selectedIndex == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        SetButtonColor(settingsButton, _selectedIndex == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(floorOneButton, _selectedIndex == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(floorTwoButton, _selectedIndex == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(closeButton,    _selectedIndex == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
     }
 
     private void SetButtonColor(Button btn, Color color)
@@ -122,13 +128,6 @@ public class PauseMenuController : MonoBehaviour
         btn.colors = c;
     }
 
-    private void ShowPausePanel()
-    {
-        _selectedIndex = 0;
-        pausePanel.SetActive(true);
-        settingsPanel.SetActive(false);
-        UpdatePauseHighlight();
-    }
 
     private void PositionMenuInFrontOfPlayer()
     {
