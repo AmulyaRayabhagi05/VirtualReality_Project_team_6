@@ -19,6 +19,7 @@ public class PuzzleAssemblyManager : MonoBehaviour
     [SerializeField] private float heldRotationSpeed = 120f;
     [SerializeField] private GameObject[] activateOnComplete;
     [SerializeField] private GameObject[] deactivateOnComplete;
+    [SerializeField] private bool debugPickup;
 
     private PuzzleAssemblyPiece _heldPiece;
     private bool _completed;
@@ -131,6 +132,7 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
         if (IsPickupPressed())
         {
+            LogDebug($"Pickup input fired. button={pickupButton} key={pickupKey}");
             if (_heldPiece != null)
             {
                 DropHeldPiece();
@@ -180,14 +182,20 @@ public class PuzzleAssemblyManager : MonoBehaviour
         RaycastHit hit;
         if (!Physics.Raycast(ray, out hit, pickupRange, pickupMask, QueryTriggerInteraction.Ignore))
         {
+            LogDebug("Pickup ray hit nothing.");
             return;
         }
+
+        LogDebug($"Pickup ray hit {hit.collider.name} on {hit.collider.transform.root.name} at {hit.distance:F2}m.");
 
         PuzzleAssemblyPiece piece = hit.collider.GetComponentInParent<PuzzleAssemblyPiece>();
         if (piece == null)
         {
+            LogDebug("Pickup ray hit collider without a PuzzleAssemblyPiece parent.");
             return;
         }
+
+        LogDebug($"Pickup matched puzzle piece {piece.PieceId}.");
 
         TryPickUp(piece);
     }
@@ -201,10 +209,23 @@ public class PuzzleAssemblyManager : MonoBehaviour
     {
         if (piece == null || _heldPiece != null || piece.IsPlaced)
         {
+            if (piece == null)
+            {
+                LogDebug("TryPickUp rejected because piece is null.");
+            }
+            else if (_heldPiece != null)
+            {
+                LogDebug($"TryPickUp rejected because {_heldPiece.PieceId} is already held.");
+            }
+            else if (piece.IsPlaced)
+            {
+                LogDebug($"TryPickUp rejected because {piece.PieceId} is already placed.");
+            }
             return false;
         }
 
         _heldPiece = piece;
+        LogDebug($"TryPickUp accepted for {piece.PieceId}.");
         piece.BeginHold();
         return true;
     }
@@ -317,5 +338,15 @@ public class PuzzleAssemblyManager : MonoBehaviour
                 objects[i].SetActive(isActive);
             }
         }
+    }
+
+    private void LogDebug(string message)
+    {
+        if (!debugPickup)
+        {
+            return;
+        }
+
+        Debug.Log($"[PuzzleAssemblyManager:{gameObject.name}] {message}", this);
     }
 }

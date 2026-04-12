@@ -10,6 +10,7 @@ using UnityEngine.XR;
 public class ReticleJoystickClick : MonoBehaviour
 {
     [SerializeField] private string clickButton = "js2";
+    [SerializeField] private bool debugReticleClick;
 
     private EventSystem _eventSystem;
     private PointerEventData _pointerEventData;
@@ -30,7 +31,7 @@ public class ReticleJoystickClick : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[ReticleJoystickClick] Click input received: {clickButton}");
+        LogDebug($"Click input received: {clickButton}");
 
         if (_pointerEventData == null)
         {
@@ -44,24 +45,24 @@ public class ReticleJoystickClick : MonoBehaviour
         _eventSystem.RaycastAll(_pointerEventData, raycastResults);
         raycastResults = raycastResults.OrderBy(result => !result.module.GetComponent<GraphicRaycaster>()).ToList();
         RaycastResult firstRaycast = FindFirstValidRaycast(raycastResults);
-        Debug.Log($"[ReticleJoystickClick] First raycast target: {(firstRaycast.gameObject != null ? firstRaycast.gameObject.name : "None")}");
+        LogDebug($"First raycast target: {(firstRaycast.gameObject != null ? firstRaycast.gameObject.name : "None")}");
         GameObject target = ExecuteEvents.GetEventHandler<IPointerClickHandler>(firstRaycast.gameObject);
 
         if (target == null)
         {
-            Debug.LogWarning("[ReticleJoystickClick] No clickable UI target under reticle.");
+            LogWarning("No clickable UI target under reticle.");
             return;
         }
 
         Selectable selectable = target.GetComponent<Selectable>();
         if (selectable != null && !selectable.interactable)
         {
-            Debug.LogWarning($"[ReticleJoystickClick] Target '{target.name}' is not interactable.");
+            LogWarning($"Target '{target.name}' is not interactable.");
             return;
         }
 
         _pointerEventData.pointerCurrentRaycast = firstRaycast;
-        Debug.Log($"[ReticleJoystickClick] Dispatching click to: {target.name}");
+        LogDebug($"Dispatching click to: {target.name}");
         ExecuteEvents.ExecuteHierarchy(target, _pointerEventData, ExecuteEvents.pointerClickHandler);
     }
 
@@ -76,5 +77,25 @@ public class ReticleJoystickClick : MonoBehaviour
         }
 
         return new RaycastResult();
+    }
+
+    private void LogDebug(string message)
+    {
+        if (!debugReticleClick)
+        {
+            return;
+        }
+
+        Debug.Log($"[ReticleJoystickClick] {message}", this);
+    }
+
+    private void LogWarning(string message)
+    {
+        if (!debugReticleClick)
+        {
+            return;
+        }
+
+        Debug.LogWarning($"[ReticleJoystickClick] {message}", this);
     }
 }
