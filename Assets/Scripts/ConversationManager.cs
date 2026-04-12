@@ -27,7 +27,7 @@ public class ConversationManager : MonoBehaviour
     public string ttsVoice = "onyx";
 
     public string axisA  = "js3";
-    public string axisOK = "js7";
+    public string axisOK = "js2";
 
     public int maxHistoryTurns = 10;
 

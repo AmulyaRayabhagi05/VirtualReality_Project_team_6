@@ -21,13 +21,19 @@ public class PressButtonController : MonoBehaviour
         SetButtonText("Press");
     }
 
-    void OnMouseDown()
+    void Update()
     {
-        ApplyColor(pressedColor);
-        dinoController.OnButtonPressed();
-    }
+        if (Input.GetButtonDown("js2"))
+        {
+            ApplyColor(pressedColor);
+            dinoController.OnButtonPressed();
+        }
 
-    void OnMouseUp() => ApplyColor(normalColor);
+        if (Input.GetButtonUp("js2"))
+        {
+            ApplyColor(normalColor);
+        }
+    }
 
     public void SetButtonText(string text)
     {

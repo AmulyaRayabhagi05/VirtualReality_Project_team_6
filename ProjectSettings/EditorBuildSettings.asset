@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Flight.unity
     guid: e8c305d99595b8442a02d738da71bb87
+  - enabled: 0
+    path: Assets/Scenes/puzzle.unity
+    guid: 1f54d7a4919c5466c9aba94924e7b02f
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 289c1b55c9541489481df5cc06664110, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 4d39da985f0e6dd498b5a029be5f7a16, type: 2}
