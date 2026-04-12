@@ -34,8 +34,8 @@ This project implements two advanced technical features:
 ## Project Demo
 *(Space reserved for Demo Video/Link)*
 
-> **Note:** A walkthrough video and the final APK download link will be updated here once the demo is finalized.
-
+> **Note:** 
+https://youtu.be/umk9iiPaZg4
 ---
 
 ## Installation & Usage
