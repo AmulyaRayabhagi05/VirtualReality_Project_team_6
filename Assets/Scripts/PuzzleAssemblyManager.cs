@@ -22,6 +22,90 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
     private PuzzleAssemblyPiece _heldPiece;
     private bool _completed;
+
+    public bool IsCompleted
+    {
+        get { return _completed; }
+    }
+
+
+
+    public bool AreAllPiecesPlaced()
+    {
+        if (pieces == null || pieces.Length == 0)
+        {
+            return false;
+        }
+
+        bool foundPiece = false;
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (pieces[i] == null)
+            {
+                continue;
+            }
+
+            foundPiece = true;
+            if (!pieces[i].IsPlaced)
+            {
+                return false;
+            }
+        }
+
+        return foundPiece;
+    }
+
+    public string GetCompletionSummary()
+    {
+        if (pieces == null || pieces.Length == 0)
+        {
+            return "no-pieces";
+        }
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (i > 0)
+            {
+                sb.Append(", ");
+            }
+
+            PuzzleAssemblyPiece piece = pieces[i];
+            if (piece == null)
+            {
+                sb.Append("null");
+                continue;
+            }
+
+            sb.Append(piece.PieceId);
+            sb.Append('=');
+            sb.Append(piece.IsPlaced ? '1' : '0');
+        }
+
+        return sb.ToString();
+    }
+
+    public bool HasConfiguredPieces
+    {
+        get
+        {
+            if (pieces == null || pieces.Length == 0)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < pieces.Length; i++)
+            {
+                if (pieces[i] != null)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
     private void Awake()
     {
         if (sourceCamera == null)
@@ -96,18 +180,15 @@ public class PuzzleAssemblyManager : MonoBehaviour
         RaycastHit hit;
         if (!Physics.Raycast(ray, out hit, pickupRange, pickupMask, QueryTriggerInteraction.Ignore))
         {
-            Debug.LogWarning("[PuzzleAssemblyManager] Pickup input pressed but raycast hit nothing.");
             return;
         }
 
         PuzzleAssemblyPiece piece = hit.collider.GetComponentInParent<PuzzleAssemblyPiece>();
         if (piece == null)
         {
-            Debug.LogWarning($"[PuzzleAssemblyManager] Raycast hit '{hit.collider.name}' but no PuzzleAssemblyPiece was found in parents.");
             return;
         }
 
-        Debug.LogWarning($"[PuzzleAssemblyManager] Picking up {piece.name}");
         TryPickUp(piece);
     }
 
@@ -120,7 +201,6 @@ public class PuzzleAssemblyManager : MonoBehaviour
     {
         if (piece == null || _heldPiece != null || piece.IsPlaced)
         {
-            Debug.LogWarning("[PuzzleAssemblyManager] TryPickUp rejected.");
             return false;
         }
 
@@ -179,9 +259,26 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
         _completed = true;
         RefreshPlacedOutlines();
+        ForcePlacedOutlines(true);
 
         SetObjectsActive(activateOnComplete, true);
         SetObjectsActive(deactivateOnComplete, false);
+    }
+
+    public void SetPlacedOutlines(bool isOutlined)
+    {
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (pieces[i] != null && pieces[i].IsPlaced)
+            {
+                pieces[i].SetOutline(isOutlined);
+            }
+        }
+    }
+
+    private void ForcePlacedOutlines(bool isOutlined)
+    {
+        SetPlacedOutlines(isOutlined);
     }
 
     private void RefreshPlacedOutlines()
@@ -196,11 +293,11 @@ public class PuzzleAssemblyManager : MonoBehaviour
         }
 
         bool shouldOutlinePlacedPieces = placedCount >= 2;
-        Debug.Log($"[PuzzleAssemblyManager] placedCount={placedCount}, shouldOutline={shouldOutlinePlacedPieces}");
         for (int i = 0; i < pieces.Length; i++)
         {
             if (pieces[i] != null && pieces[i].IsPlaced)
             {
+                Debug.Log($"[PuzzleAssemblyManager:{gameObject.name}] outline {pieces[i].PieceId} => {shouldOutlinePlacedPieces}");
                 pieces[i].SetOutline(shouldOutlinePlacedPieces);
             }
         }
