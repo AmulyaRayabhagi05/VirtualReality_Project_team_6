@@ -13,6 +13,8 @@ public class PauseMenuController : MonoBehaviour
     public float stickThreshold = 0.5f;
     public float navigationCooldown = 0.3f;
     public CharacterMovement characterMovement;
+    
+    public static bool IsPaused { get; private set; } = false;
 
     private int _selectedIndex = 0;
     private const int OPTION_COUNT = 2;
@@ -42,6 +44,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void PauseGame()
     {
+        IsPaused = true;
         if (characterMovement != null) characterMovement.enabled = false;
         PositionMenuInFrontOfPlayer();
         menuCanvas.gameObject.SetActive(true);
@@ -51,6 +54,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void ResumeGame()
     {
+        IsPaused = false;
         if (characterMovement != null) characterMovement.enabled = true;
         _stickNeutral = true;
         _cooldownTimer = 0f;
