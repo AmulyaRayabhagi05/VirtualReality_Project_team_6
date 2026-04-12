@@ -9,7 +9,7 @@ public class Teleport : MonoBehaviour{
     void Start(){ characterController=GetComponent<CharacterController>();}
 
     void Update(){
-        bool aPressed=Input.GetButton("js3");
+        bool aPressed=Input.GetButton("js10");
 
         if (aPressed && !aWasPressed){TryTeleport();}
 

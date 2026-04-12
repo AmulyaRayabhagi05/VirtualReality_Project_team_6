@@ -10,7 +10,7 @@ public class ClickInputController : MonoBehaviour
 
     void Update()
     {
-        bool clicked = Input.GetButtonDown("js2");
+        bool clicked = Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.P);
 
         if (!clicked) {return; }
 
