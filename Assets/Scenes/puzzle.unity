@@ -184,8 +184,8 @@ MonoBehaviour:
   rotateKey: 116
   holdDistance: 1.2
   holdOffset: {x: 0, y: -0.1, z: 0}
-  followReticleToSurface: 1
-  lockHeldPieceToPuzzleHeight: 1
+  followReticleToSurface: 0
+  lockHeldPieceToPuzzleHeight: 0
   pickupRange: 6
   pickupMask:
     serializedVersion: 2
@@ -1763,8 +1763,8 @@ MonoBehaviour:
   rotateKey: 116
   holdDistance: 1.2
   holdOffset: {x: 0, y: 0, z: 0}
-  followReticleToSurface: 1
-  lockHeldPieceToPuzzleHeight: 1
+  followReticleToSurface: 0
+  lockHeldPieceToPuzzleHeight: 0
   pickupRange: 6
   pickupMask:
     serializedVersion: 2

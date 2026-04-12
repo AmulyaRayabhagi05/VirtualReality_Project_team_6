@@ -23,7 +23,7 @@ public class NPCInteractable : MonoBehaviour
 
     [Header("Reticle Input")]
     [SerializeField] private string actionButtonInput = "js2";
-    [SerializeField] private KeyCode actionButtonKey = KeyCode.R;
+    [SerializeField] private KeyCode actionButtonKey = KeyCode.P;
 
     private Transform _playerHead;
     private bool _isActive;
