@@ -103,7 +103,7 @@ public class FloorsMenuController : MonoBehaviour
 
     private void HandleConfirm()
     {
-        if (!Input.GetKeyDown(KeyCode.JoystickButton5)) return;
+        if (!Input.GetKeyDown(KeyCode.JoystickButton2)) return;
 
         switch (_selectedIndex)
         {

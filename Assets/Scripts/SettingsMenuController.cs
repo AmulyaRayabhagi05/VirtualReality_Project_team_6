@@ -118,7 +118,7 @@ public class SettingsMenuController : MonoBehaviour
 
     private void HandleConfirm()
     {
-        if (!Input.GetButtonDown("js5")) return;
+        if (!Input.GetButtonDown("js2")) return;
 
         if (_selectedIndex == 3)
             pauseMenuController.BackToPauseMenu();

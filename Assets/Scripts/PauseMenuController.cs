@@ -99,7 +99,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void HandleConfirm()
     {
-        if (!Input.GetButtonDown("js5")) return;
+        if (!Input.GetButtonDown("js2")) return;
 
         switch (_selectedIndex)
         {

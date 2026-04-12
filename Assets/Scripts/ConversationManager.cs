@@ -26,10 +26,7 @@ public class ConversationManager : MonoBehaviour
 
     public string ttsVoice = "onyx";
 
-    public string axisA  = "js3"; 
-    public string axisB  = "js5";  
-    public string axisX  = "js2"; 
-    public string axisY  = "js3"; 
+    public string axisA  = "js3";
     public string axisOK = "js7";
 
     public int maxHistoryTurns = 10;
@@ -64,7 +61,7 @@ public class ConversationManager : MonoBehaviour
                 }
                 else
                 {
-                    _activeNPC.SetStatus("Hold H or js3 to speak");
+                    _activeNPC.SetStatus("Hold Y to speak");
                 }
             }
         }
@@ -150,7 +147,7 @@ public class ConversationManager : MonoBehaviour
 
         if (_activeNPC == npc)
         {
-            npc.SetStatus("Hold H or js3 to speak");
+            npc.SetStatus("Hold Y to speak");
             _isPipelineRunning = false;
         }
     }

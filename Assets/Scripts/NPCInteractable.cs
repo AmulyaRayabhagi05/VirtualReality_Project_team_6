@@ -79,7 +79,7 @@ public class NPCInteractable : MonoBehaviour
         _isActive = true;
         if (npcNameLabel != null) npcNameLabel.text = npcName;
         if (actionButtonLabel != null) actionButtonLabel.text = "End";
-        if (statusLabel != null) statusLabel.text = "Hold H or js3 to speak";
+        if (statusLabel != null) statusLabel.text = "Hold Y to speak";
         if (transcriptLabel != null) transcriptLabel.text = "";
     }
 

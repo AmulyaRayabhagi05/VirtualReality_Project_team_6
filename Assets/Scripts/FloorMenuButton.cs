@@ -6,7 +6,7 @@ public class FloorMenuButton : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.JoystickButton0) || Input.GetKeyDown(KeyCode.E))
+        if (Input.GetButtonDown("js5") || Input.GetKeyDown(KeyCode.E))
         {
             floorMenuController.OpenMenu();
         }

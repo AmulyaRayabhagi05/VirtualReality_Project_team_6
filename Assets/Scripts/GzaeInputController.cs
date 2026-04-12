@@ -10,7 +10,7 @@ public class ClickInputController : MonoBehaviour
 
     void Update()
     {
-        bool clicked = Input.GetMouseButtonDown(0) || Input.GetButtonDown("js0");
+        bool clicked = Input.GetMouseButtonDown(0) || Input.GetButtonDown("js2");
 
         if (!clicked) {return; }
 
