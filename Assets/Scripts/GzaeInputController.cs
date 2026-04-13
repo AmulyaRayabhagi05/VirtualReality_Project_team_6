@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.Collections.Generic;
 
 public class ClickInputController : MonoBehaviour
 {
@@ -12,7 +10,7 @@ public class ClickInputController : MonoBehaviour
     {
         bool clicked = Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.P);
 
-        if (!clicked) {return; }
+        if (!clicked) { return; }
 
         Ray ray = new Ray(transform.position, transform.forward);
 
@@ -20,14 +18,10 @@ public class ClickInputController : MonoBehaviour
         {
             Button btn = hit.collider.GetComponent<Button>();
             if (btn == null)
-            {
                 btn = hit.collider.GetComponentInParent<Button>();
-            }
 
             if (btn != null)
-            {
                 btn.onClick.Invoke();
-            }
         }
     }
 }

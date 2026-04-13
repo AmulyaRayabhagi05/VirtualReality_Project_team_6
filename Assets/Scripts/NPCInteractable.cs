@@ -27,37 +27,43 @@ public class NPCInteractable : MonoBehaviour
 
     private Transform _playerHead;
     private bool _isActive;
+    private float _lastActionTime = -10f;
+    private const float ACTION_COOLDOWN = 0.5f;
 
     private void Start()
     {
-        var cam = Camera.main;
-        if (cam != null)
-        {
-            _playerHead = cam.transform;
-        }
+        if (Camera.main != null)
+            _playerHead = Camera.main.transform;
 
         if (actionButton != null)
         {
+            // Remove before adding to prevent duplicate listeners if Start runs more than once
+            actionButton.onClick.RemoveListener(OnActionButtonPressed);
             actionButton.onClick.AddListener(OnActionButtonPressed);
         }
 
         if (conversationPanel != null)
-        {
             conversationPanel.SetActive(false);
-        }
 
         SetIdleState();
     }
 
     private void Update()
     {
+        // Retry each frame until the camera is found (handles VR rigs that initialise late)
+        if (_playerHead == null && Camera.main != null)
+            _playerHead = Camera.main.transform;
+
         HandlePanelVisibility();
         BillboardPanel();
-        HandleReticleActionInput();
     }
 
     private void OnActionButtonPressed()
     {
+        // Prevent double-invocation from multiple input sources firing in the same press
+        if (Time.time - _lastActionTime < ACTION_COOLDOWN) return;
+        _lastActionTime = Time.time;
+
         if (ConversationManager.Instance == null)
         {
             Debug.LogError("[NPCInteractable] ConversationManager not found!");
@@ -65,13 +71,9 @@ public class NPCInteractable : MonoBehaviour
         }
 
         if (_isActive)
-        {
             ConversationManager.Instance.EndConversation();
-        }
         else
-        {
             ConversationManager.Instance.StartConversation(this);
-        }
     }
 
     public void OnBecomeActive()
@@ -115,9 +117,7 @@ public class NPCInteractable : MonoBehaviour
         float dist = Vector3.Distance(transform.position, _playerHead.position);
         bool show = dist <= panelVisibleRange;
         if (conversationPanel.activeSelf != show)
-        {
             conversationPanel.SetActive(show);
-        }
     }
 
     private void BillboardPanel()
@@ -127,46 +127,6 @@ public class NPCInteractable : MonoBehaviour
         Vector3 dir = conversationPanel.transform.position - _playerHead.position;
         dir.y = 0f;
         if (dir.sqrMagnitude > 0.001f)
-        {
             conversationPanel.transform.rotation = Quaternion.LookRotation(dir);
-        }
-    }
-
-    private void HandleReticleActionInput()
-    {
-        if (_isActive || !IsActionInputPressed() || !IsActionButtonTargeted())
-        {
-            return;
-        }
-
-        actionButton.onClick.Invoke();
-    }
-
-    private bool IsActionInputPressed()
-    {
-        return Input.GetButtonDown(actionButtonInput) || Input.GetKeyDown(actionButtonKey);
-    }
-
-    private bool IsActionButtonTargeted()
-    {
-        if (actionButton == null || !actionButton.isActiveAndEnabled || !actionButton.interactable)
-        {
-            return false;
-        }
-
-        if (conversationPanel == null || !conversationPanel.activeInHierarchy)
-        {
-            return false;
-        }
-
-        RectTransform rectTransform = actionButton.transform as RectTransform;
-        Camera worldCamera = Camera.main;
-        if (rectTransform == null || worldCamera == null)
-        {
-            return false;
-        }
-
-        Vector2 reticlePosition = new Vector2(Screen.width * 0.5f, Screen.height * 0.5f);
-        return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, reticlePosition, worldCamera);
     }
 }

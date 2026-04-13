@@ -34,7 +34,7 @@ public class ConversationManager : MonoBehaviour
     private NPCInteractable   _activeNPC;
     private List<ChatMessage> _history = new();
     private bool              _isPipelineRunning;
-    private bool              _isRecording; 
+    private bool              _isRecording;
 
 
     private void Update()
@@ -66,10 +66,6 @@ public class ConversationManager : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown(axisOK)  || Input.GetKeyDown(KeyCode.O))
-        {
-            EndConversation();
-        }
     }
 
     public void StartConversation(NPCInteractable npc)
