@@ -11,7 +11,7 @@ public class TeleportCube : MonoBehaviour
 
     void Update()
     {
-        bool controllerInput = Input.GetButtonDown("js0");
+        bool controllerInput = Input.GetButtonDown("js2")  || Input.GetKeyDown(KeyCode.M);
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
