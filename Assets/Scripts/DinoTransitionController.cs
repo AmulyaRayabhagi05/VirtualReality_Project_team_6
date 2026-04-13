@@ -29,9 +29,8 @@ public class DinoTransitionController : MonoBehaviour
     {
         skeletonDino.SetActive(true);
         fleshDino.SetActive(false);
-        skeletonAnimator.enabled = true; 
+        skeletonAnimator.enabled = false;
         if (fleshAnimator) fleshAnimator.enabled = false;
-        SetButton("Press");
 
     }
 
@@ -70,7 +69,6 @@ public class DinoTransitionController : MonoBehaviour
         }
 
         phase = Phase.WalkingFleshed;
-        SetButton("Press");
     }
 
     IEnumerator RoutinePress2()
@@ -99,7 +97,6 @@ public class DinoTransitionController : MonoBehaviour
         if (fleshAnimator) fleshAnimator.enabled = false;
 
         phase = Phase.Idle;
-        SetButton("Press");
     }
 
     IEnumerator WaitForState(Animator anim, string stateName, float timeout = 12f)
@@ -147,13 +144,5 @@ public class DinoTransitionController : MonoBehaviour
             StopCoroutine(activeRoutine);
         }
         activeRoutine = StartCoroutine(routine);
-    }
-
-    void SetButton(string label)
-    {
-        if (buttonController)
-        {
-            buttonController.SetButtonText(label);
-        }
     }
 }

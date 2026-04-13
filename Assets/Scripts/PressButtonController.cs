@@ -1,14 +1,8 @@
 using UnityEngine;
-using TMPro;   
 public class PressButtonController : MonoBehaviour
 {
-    [Header("References")]
     public DinoTransitionController dinoController;
 
-    [Header("Label")]
-    public TextMeshPro buttonText;
-
-    [Header("Visual Feedback")]
     public Color normalColor = Color.white;
     public Color pressedColor = new Color(0.65f, 0.65f, 0.65f);
 
@@ -18,28 +12,19 @@ public class PressButtonController : MonoBehaviour
     {
         rend = GetComponent<Renderer>();
         ApplyColor(normalColor);
-        SetButtonText("Press");
     }
 
     void Update()
     {
-        if (Input.GetButtonDown("js2"))
+        if (Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.M))
         {
             ApplyColor(pressedColor);
             dinoController.OnButtonPressed();
         }
 
-        if (Input.GetButtonUp("js2"))
+        if (Input.GetButtonUp("js2") || Input.GetKeyUp(KeyCode.M))
         {
             ApplyColor(normalColor);
-        }
-    }
-
-    public void SetButtonText(string text)
-    {
-        if (buttonText)
-        {
-            buttonText.text = text;
         }
     }
 
