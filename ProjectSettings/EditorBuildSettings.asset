@@ -17,10 +17,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/dinosaur.unity
     guid: 05bfadebef392394ca2024518e8b093c
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/FirstFloor.unity
     guid: 93741a1d15f15a54e9c567753d04dd6b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/SecondFloor.unity
     guid: a7c5518779b8f814e99611c65082571d
   - enabled: 1
