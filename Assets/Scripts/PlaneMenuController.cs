@@ -268,11 +268,6 @@ public class PlaneMenuController : MonoBehaviour
     public void StartSimulation()
     {
         Debug.Log("Starting Simulation");
-        EventSystem currentES = EventSystem.current;
-        if (currentES != null)
-        {
-            currentES.gameObject.SetActive(false);
-        }
-        SceneManager.LoadScene("Flight", LoadSceneMode.Additive);
+        SceneManager.LoadScene("Flight");
     }
 }

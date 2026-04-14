@@ -112,51 +112,6 @@ public class FlyController : MonoBehaviour
         gyroOffset = GyroToUnity(Input.gyro.attitude);
     }
 
-    private static FlyController instance;
-
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }else{
-            Destroy(gameObject);
-            return;
-        }
-    }
-
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (cameraTransform == null || cameraTransform != Camera.main.transform){
-            cameraTransform = Camera.main.transform;
-	}
-        activeMode = ResolveInputMode();
-
-        if (activeMode == InputMode.GyroscopePhone)
-        {
-            Input.gyro.enabled = true;
-            CalibrateGyro();
-        }
-
-        GameObject[] planeViews = GameObject.FindGameObjectsWithTag("PlaneControl");
-        for (int i = 1; i < planeViews.Length; i++){
-            Destroy(planeViews[i]);
-	}
-    }
-
-
-
     public void DisableInput()
     {
         IsDead = true;
