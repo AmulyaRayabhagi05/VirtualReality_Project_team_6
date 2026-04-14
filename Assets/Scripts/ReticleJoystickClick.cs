@@ -11,9 +11,15 @@ public class ReticleJoystickClick : MonoBehaviour
 {
     [SerializeField] private string clickButton = "js2";
     [SerializeField] private bool debugReticleClick;
+    public static bool IsJustOpened { get; private set; }
 
     private EventSystem _eventSystem;
     private PointerEventData _pointerEventData;
+
+    private void ClearJustOpened()
+    {
+        IsJustOpened = false;
+    }
 
     private void Awake()
     {
@@ -28,6 +34,11 @@ public class ReticleJoystickClick : MonoBehaviour
     {
         if (_eventSystem == null || !Input.GetButtonDown(clickButton))
         {
+            return;
+        }
+        if (PlaneMenuController.IsJustOpened)
+        {
+            LogDebug("menu opened in secondFloor");
             return;
         }
 

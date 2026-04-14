@@ -18,13 +18,15 @@ public class PlaneMenuController : MonoBehaviour
 
     public float stickThreshold = 0.5f;
     public float navigationCooldown = 0.3f;
+    public static bool IsJustOpened { get; private set; }
 
     private int _selectedIndex = 0;
     private const int OPTION_COUNT = 3;
     private bool _stickNeutral = true;
     private float _cooldownTimer = 0f;
+    private float _openCooldown = 0f;
 
-    private static readonly Color SELECTED_COLOR   = new Color(1f, 0.85f, 0f);
+    private static readonly Color SELECTED_COLOR = new Color(1f, 0.85f, 0f);
     private static readonly Color UNSELECTED_COLOR = Color.white;
 
     private CanvasGroup menuPanelGroup;
@@ -36,31 +38,41 @@ public class PlaneMenuController : MonoBehaviour
         menuCanvas = menuPanel.GetComponentInParent<Canvas>();
 
         menuPanelGroup = menuPanel.GetComponent<CanvasGroup>();
-        if (menuPanelGroup == null){
+        if (menuPanelGroup == null)
+        {
             menuPanelGroup = menuPanel.AddComponent<CanvasGroup>();
-	}
+        }
 
         HideMenu();
 
-        if (outsideButton) {
-		outsideButton.onClick.AddListener(GoOutside);
+        if (outsideButton)
+        {
+            outsideButton.onClick.AddListener(GoOutside);
         }
-	if (startSimButton) {
-		startSimButton.onClick.AddListener(StartSimulation);
+        if (startSimButton)
+        {
+            startSimButton.onClick.AddListener(StartSimulation);
         }
-	if (closeMenuButton){
-		closeMenuButton.onClick.AddListener(HideMenu);
-   	} 
-   }
+        if (closeMenuButton)
+        {
+            closeMenuButton.onClick.AddListener(HideMenu);
+        }
+    }
 
     void Update()
     {
         if (menuPanelGroup.alpha > 0f)
         {
+            _openCooldown -= Time.unscaledDeltaTime;
             _cooldownTimer -= Time.unscaledDeltaTime;
+
             HandleNavigation();
-            HandleConfirm();
-            HandleGazeAndController();
+
+            if (_openCooldown <= 0f)
+            {
+                HandleConfirm();
+                HandleGazeAndController();
+            }
         }
     }
 
@@ -92,16 +104,16 @@ public class PlaneMenuController : MonoBehaviour
 
         switch (_selectedIndex)
         {
-            case 0: GoOutside();      break;
+            case 0: GoOutside(); break;
             case 1: StartSimulation(); break;
-            case 2: HideMenu();        break;
+            case 2: HideMenu(); break;
         }
     }
 
     private void UpdateHighlight()
     {
-        SetButtonColor(outsideButton,   _selectedIndex == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        SetButtonColor(startSimButton,  _selectedIndex == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(outsideButton, _selectedIndex == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(startSimButton, _selectedIndex == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
         SetButtonColor(closeMenuButton, _selectedIndex == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
     }
 
@@ -120,7 +132,7 @@ public class PlaneMenuController : MonoBehaviour
         menuCanvas.transform.position = cam.position + cam.forward * menuDistance;
 
         menuCanvas.transform.rotation = Quaternion.LookRotation(
-            menuCanvas.transform.position -cam.position
+            menuCanvas.transform.position - cam.position
         );
     }
 
@@ -152,24 +164,32 @@ public class PlaneMenuController : MonoBehaviour
                 }
             }
 
-            if (gazedButton != null){
+            if (gazedButton != null)
+            {
                 currentGazedButton = gazedButton;
-                Debug.Log("looking at button:" +gazedButton.name);
+                Debug.Log("looking at button:" + gazedButton.name);
 
                 if (Input.GetButtonDown("js1"))
                 {
 
-                    if (gazedButton.name == "CloseMenu") {
-			HideMenu();
-                    }else if (gazedButton.name == "Outside"){
-			GoOutside();
-                    }else if (gazedButton.name == "StartSim"){ 
-			StartSimulation();
-		    }
+                    if (gazedButton.name == "CloseMenu")
+                    {
+                        HideMenu();
+                    }
+                    else if (gazedButton.name == "Outside")
+                    {
+                        GoOutside();
+                    }
+                    else if (gazedButton.name == "StartSim")
+                    {
+                        StartSimulation();
+                    }
                     Button btn = gazedButton.GetComponent<Button>();
                     if (btn != null) btn.onClick.Invoke();
                 }
-            }else{
+            }
+            else
+            {
                 currentGazedButton = null;
             }
         }
@@ -177,9 +197,10 @@ public class PlaneMenuController : MonoBehaviour
 
     public void ShowMenu()
     {
-        if (movementScript != null){
+        if (movementScript != null)
+        {
             movementScript.enabled = false;
-	}
+        }
         LockMenuToCamera();
 
         menuPanelGroup.alpha = 1f;
@@ -190,8 +211,17 @@ public class PlaneMenuController : MonoBehaviour
         _selectedIndex = 0;
         _stickNeutral = true;
         _cooldownTimer = 0f;
+        _openCooldown = 0.3f;
+        IsJustOpened = true;
+        Invoke(nameof(ClearJustOpened), 0.3f);
         UpdateHighlight();
     }
+
+    private void ClearJustOpened()
+    {
+        IsJustOpened = false;
+    }
+
 
     public void HideMenu()
     {
@@ -221,11 +251,14 @@ public class PlaneMenuController : MonoBehaviour
             {
                 scriptToEnable.enabled = true;
                 Debug.Log("Movement re-enabled");
-            }else
+            }
+            else
             {
                 Debug.LogError("No movement script found");
             }
-        }else{
+        }
+        else
+        {
             Debug.LogError("xrCardboardRig or outsideDestination is nul");
         }
 
@@ -236,9 +269,10 @@ public class PlaneMenuController : MonoBehaviour
     {
         Debug.Log("Starting Simulation");
         EventSystem currentES = EventSystem.current;
-        if (currentES != null) {
-		currentES.gameObject.SetActive(false);
+        if (currentES != null)
+        {
+            currentES.gameObject.SetActive(false);
         }
-	SceneManager.LoadScene("Flight", LoadSceneMode.Additive);
+        SceneManager.LoadScene("Flight", LoadSceneMode.Additive);
     }
 }
