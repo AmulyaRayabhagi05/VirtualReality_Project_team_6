@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -31,7 +29,6 @@ public class PlaneMenuController : MonoBehaviour
 
     private CanvasGroup menuPanelGroup;
     private Canvas menuCanvas;
-    private GameObject currentGazedButton = null;
 
     void Start()
     {
@@ -71,7 +68,6 @@ public class PlaneMenuController : MonoBehaviour
             if (_openCooldown <= 0f)
             {
                 HandleConfirm();
-                HandleGazeAndController();
             }
         }
     }
@@ -136,65 +132,6 @@ public class PlaneMenuController : MonoBehaviour
         );
     }
 
-    void HandleGazeAndController()
-    {
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = new Vector2(Screen.width / 2f, Screen.height / 2f)
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var r in results)
-        {
-            Debug.Log("Gaze hit:" + r.gameObject.name);
-        }
-
-        if (results.Count > 0)
-        {
-            GameObject gazedButton = null;
-            foreach (var r in results)
-            {
-                Button btn = r.gameObject.GetComponent<Button>();
-                if (btn != null)
-                {
-                    gazedButton = r.gameObject;
-                    break;
-                }
-            }
-
-            if (gazedButton != null)
-            {
-                currentGazedButton = gazedButton;
-                Debug.Log("looking at button:" + gazedButton.name);
-
-                if (Input.GetButtonDown("js1"))
-                {
-
-                    if (gazedButton.name == "CloseMenu")
-                    {
-                        HideMenu();
-                    }
-                    else if (gazedButton.name == "Outside")
-                    {
-                        GoOutside();
-                    }
-                    else if (gazedButton.name == "StartSim")
-                    {
-                        StartSimulation();
-                    }
-                    Button btn = gazedButton.GetComponent<Button>();
-                    if (btn != null) btn.onClick.Invoke();
-                }
-            }
-            else
-            {
-                currentGazedButton = null;
-            }
-        }
-    }
-
     public void ShowMenu()
     {
         if (movementScript != null)
@@ -250,16 +187,7 @@ public class PlaneMenuController : MonoBehaviour
             if (scriptToEnable != null)
             {
                 scriptToEnable.enabled = true;
-                Debug.Log("Movement re-enabled");
             }
-            else
-            {
-                Debug.LogError("No movement script found");
-            }
-        }
-        else
-        {
-            Debug.LogError("xrCardboardRig or outsideDestination is nul");
         }
 
         HideMenu();
@@ -267,7 +195,6 @@ public class PlaneMenuController : MonoBehaviour
 
     public void StartSimulation()
     {
-        Debug.Log("Starting Simulation");
         SceneManager.LoadScene("Flight");
     }
 }
