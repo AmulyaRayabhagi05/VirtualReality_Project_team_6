@@ -67,6 +67,13 @@ public class RaycastPointer : MonoBehaviour
 
     void Update()
     {
+        // In multiplayer each player prefab has its own RaycastPointer. Only the one whose
+        // camera is active should act as the singleton; this reclaims instance every frame
+        // so a remote player's Awake() overwrite is corrected on the very next frame.
+        if (gazeCamera == null || !gazeCamera.gameObject.activeInHierarchy)
+            return;
+        instance = this;
+
         Vector3 origin = gazeCamera.transform.position;
         Vector3 direction = gazeCamera.transform.forward;
 
