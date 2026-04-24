@@ -149,10 +149,27 @@ public class ExcavationDirtPile : MonoBehaviour
         _chunks.Clear();
     }
 
+    public event System.Action<int[]> OnChunksExcavated;
+
+    public int ChunkCount => _chunks.Count;
+
+    public bool IsChunkActive(int index)
+    {
+        return index >= 0 && index < _chunks.Count &&
+               _chunks[index] != null && _chunks[index].gameObject.activeSelf;
+    }
+
+    public void ForceExcavateChunk(int index)
+    {
+        if (index < 0 || index >= _chunks.Count) return;
+        if (_chunks[index] == null) return;
+        _chunks[index].gameObject.SetActive(false);
+    }
+
     public bool Excavate(Vector3 worldPoint, float radius)
     {
-        bool removedAny = false;
         float radiusSqr = radius * radius;
+        System.Collections.Generic.List<int> cleared = null;
 
         for (int i = 0; i < _chunks.Count; i++)
         {
@@ -170,10 +187,17 @@ public class ExcavationDirtPile : MonoBehaviour
             }
 
             chunk.gameObject.SetActive(false);
-            removedAny = true;
+            if (cleared == null) cleared = new System.Collections.Generic.List<int>();
+            cleared.Add(i);
         }
 
-        return removedAny;
+        if (cleared != null)
+        {
+            OnChunksExcavated?.Invoke(cleared.ToArray());
+            return true;
+        }
+
+        return false;
     }
 
     private void ClearGeneratedChildren()

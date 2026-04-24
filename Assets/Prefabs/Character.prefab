@@ -142,7 +142,7 @@ MonoBehaviour:
   sourceCamera: {fileID: 1848455617876835922}
   brushEquipController: {fileID: 7261835996483898964}
   excavateButton: js3
-  excavateKey: 114
+  excavateKey: 122
   range: 6
   brushRadius: 5
   hitMask:
@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClientNetworkTransform
   ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
+  NetworkTransformExpanded: 1
   AuthorityMode: 0
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
