@@ -132,6 +132,8 @@ public class PauseMenuController : MonoBehaviour
 
     private void PositionMenuInFrontOfPlayer()
     {
+        if (_vrCamera == null || !_vrCamera.gameObject.activeInHierarchy)
+            _vrCamera = Camera.main;
         if (_vrCamera == null) return;
 
         Transform cam = _vrCamera.transform;
