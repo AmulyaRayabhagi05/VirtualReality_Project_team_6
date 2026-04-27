@@ -1,37 +1,27 @@
 using UnityEngine;
+using UnityEngine.UI;
+
 public class PressButtonController : MonoBehaviour
 {
     public DinoTransitionController dinoController;
+    public Button pressButton;
 
-    public Color normalColor = Color.white;
-    public Color pressedColor = new Color(0.65f, 0.65f, 0.65f);
-
-    private Renderer rend;
+    private DinoNetworkSync _networkSync;
 
     void Start()
     {
-        rend = GetComponent<Renderer>();
-        ApplyColor(normalColor);
+        if (dinoController != null)
+            _networkSync = dinoController.GetComponent<DinoNetworkSync>();
+
+        if (pressButton != null)
+            pressButton.onClick.AddListener(OnButtonClicked);
     }
 
-    void Update()
+    void OnButtonClicked()
     {
-        if (Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.M))
-        {
-            ApplyColor(pressedColor);
+        if (_networkSync != null && _networkSync.IsSpawned)
+            _networkSync.OnButtonPressedNetworked();
+        else
             dinoController.OnButtonPressed();
-        }
-
-        if (Input.GetButtonUp("js2") || Input.GetKeyUp(KeyCode.M))
-        {
-            ApplyColor(normalColor);
-        }
-    }
-
-    void ApplyColor(Color c)
-    {
-        if (rend) {
-            rend.material.color = c;
-        }
     }
 }
