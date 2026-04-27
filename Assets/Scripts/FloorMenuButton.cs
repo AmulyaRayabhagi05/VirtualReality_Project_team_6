@@ -12,6 +12,9 @@ public class FloorMenuButton : MonoBehaviour
 
     private void Update()
     {
+        if (floorMenuController == null)
+            floorMenuController = Object.FindAnyObjectByType<FloorsMenuController>(FindObjectsInactive.Include);
+
         if (floorMenuController == null) return;
 
         if (Input.GetButtonDown("js5") || Input.GetKeyDown(KeyCode.E))

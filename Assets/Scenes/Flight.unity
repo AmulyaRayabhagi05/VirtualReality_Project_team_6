@@ -36580,7 +36580,6 @@ GameObject:
   - component: {fileID: 1523853550}
   - component: {fileID: 1523853549}
   - component: {fileID: 1523853548}
-  - component: {fileID: 1523853547}
   - component: {fileID: 1523853552}
   - component: {fileID: 1523853553}
   m_Layer: 5
@@ -36590,18 +36589,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1523853547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1523853546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66b49c8eff7728c4aa7a5b590c1ed3cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DeathUIManager
 --- !u!114 &1523853548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41628,7 +41615,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1523853547}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DeathUIManager, Assembly-CSharp
         m_MethodName: OnRestartClicked
         m_Mode: 1

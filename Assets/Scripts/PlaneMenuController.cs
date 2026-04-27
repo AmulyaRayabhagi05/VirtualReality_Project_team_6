@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class PlaneMenuController : MonoBehaviour
 {
@@ -169,6 +170,7 @@ public class PlaneMenuController : MonoBehaviour
         menuPanelGroup.blocksRaycasts = false;
     }
 
+    private GameObject _frozenPlayer;
     private MonoBehaviour cachedMovementScript;
 
     public void SetMovementScript(MonoBehaviour script)
@@ -176,25 +178,39 @@ public class PlaneMenuController : MonoBehaviour
         cachedMovementScript = script;
     }
 
+    // Called by TeleportCube when the player enters the plane.
+    public void NotifyEnteredPlane(GameObject player)
+    {
+        _frozenPlayer = player;
+    }
+
     public void GoOutside()
     {
-        MonoBehaviour scriptToEnable = movementScript != null ? movementScript : cachedMovementScript;
+        GameObject player = _frozenPlayer ?? TeleportCube.GetLocalPlayerObject() ?? xrCardboardRig;
 
-        if (xrCardboardRig != null && outsideDestination != null)
+        if (player != null && outsideDestination != null)
         {
-            xrCardboardRig.transform.position = outsideDestination.position;
+            player.transform.position = outsideDestination.position;
 
-            if (scriptToEnable != null)
+            var cc = player.GetComponentInChildren<CharacterController>();
+            if (cc != null) cc.enabled = true;
+
+            var pm = player.GetComponentInChildren<PlayerMovement>();
+            if (pm != null)
+                pm.enabled = true;
+            else
             {
-                scriptToEnable.enabled = true;
+                MonoBehaviour scriptToEnable = movementScript != null ? movementScript : cachedMovementScript;
+                if (scriptToEnable != null) scriptToEnable.enabled = true;
             }
         }
 
+        _frozenPlayer = null;
         HideMenu();
     }
 
     public void StartSimulation()
     {
-        SceneManager.LoadScene("Flight");
+        NetworkSceneLoader.Load("Flight");
     }
 }
