@@ -54,6 +54,11 @@ public class InfoPanelController : MonoBehaviour
         OnPanelClosed?.Invoke();
     }
 
+    public void HidePanelSilent()
+    {
+        SetVisible(false);
+    }
+
     private void SetVisible(bool visible)
     {
         canvasGroup.alpha = visible ? 1f : 0f;
