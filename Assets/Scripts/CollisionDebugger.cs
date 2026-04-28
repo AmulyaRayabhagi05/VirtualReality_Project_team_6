@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/// <summary>
-/// Temporary debug script — attach to your Character to see if ANY collision is detected.
-/// Check the Console window when you hit a mountain.
-/// Delete this script once collisions are confirmed working.
-/// </summary>
 public class CollisionDebugger : MonoBehaviour
 {
     void OnCollisionEnter(Collision collision)

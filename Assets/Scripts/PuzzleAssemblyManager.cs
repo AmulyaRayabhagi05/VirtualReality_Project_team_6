@@ -24,7 +24,6 @@ public class PuzzleAssemblyManager : MonoBehaviour
     private PuzzleAssemblyPiece _heldPiece;
     private bool _completed;
 
-    // Fired when this client places a piece; index matches the pieces array
     public event System.Action<int> OnPiecePlacedLocally;
 
     public bool IsCompleted
@@ -128,8 +127,6 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
     private void Update()
     {
-        // Re-acquire if null or if the camera was deactivated (e.g. a remote player's camera
-        // was briefly MainCamera when their prefab spawned, then got turned off by PlayerNetworkSetup)
         if (sourceCamera == null || !sourceCamera.gameObject.activeInHierarchy)
         {
             sourceCamera = Camera.main;
@@ -209,9 +206,6 @@ public class PuzzleAssemblyManager : MonoBehaviour
             return;
         }
 
-        // Ignore pieces that belong to a different PuzzleAssemblyManager in the scene.
-        // Without this check, two managers both respond to every key press and can steal
-        // each other's pieces, breaking placement and network sync.
         if (GetPieceIndex(piece) < 0)
         {
             LogDebug($"Pickup ray hit {piece.PieceId} which belongs to a different puzzle manager.");
@@ -295,14 +289,11 @@ public class PuzzleAssemblyManager : MonoBehaviour
         }
     }
 
-    // Called by PuzzleManagerNetworkSync to apply a placement that happened on another client
     public void ForcePlacePiece(int index)
     {
         if (index < 0 || index >= pieces.Length) return;
         if (pieces[index] == null || pieces[index].IsPlaced) return;
 
-        // If we were holding this piece locally (e.g. two players grabbed the same piece),
-        // clear the reference so the next R press opens a fresh pickup instead of a ghost drop.
         if (_heldPiece == pieces[index])
             _heldPiece = null;
 

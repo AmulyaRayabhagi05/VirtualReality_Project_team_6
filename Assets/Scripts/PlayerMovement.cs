@@ -20,7 +20,6 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        // Only the owner drives the CharacterController; remote players are moved by NetworkTransform
         cc.enabled = IsOwner;
     }
 

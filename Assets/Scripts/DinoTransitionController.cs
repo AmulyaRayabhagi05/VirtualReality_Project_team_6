@@ -137,7 +137,6 @@ public class DinoTransitionController : MonoBehaviour
         }
     }
 
-    // Called by DinoNetworkSync to restore state for late-joining clients (no animation).
     public void ApplyPhaseImmediate(int phaseIndex)
     {
         if (activeRoutine != null)
@@ -146,7 +145,7 @@ public class DinoTransitionController : MonoBehaviour
             activeRoutine = null;
         }
 
-        if (phaseIndex == 0) // Idle
+        if (phaseIndex == 0)
         {
             phase = Phase.Idle;
             skeletonDino.SetActive(true);
@@ -154,7 +153,7 @@ public class DinoTransitionController : MonoBehaviour
             if (skeletonAnimator) skeletonAnimator.enabled = false;
             if (fleshAnimator) fleshAnimator.enabled = false;
         }
-        else // WalkingFleshed
+        else
         {
             phase = Phase.WalkingFleshed;
             skeletonDino.SetActive(false);

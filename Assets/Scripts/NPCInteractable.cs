@@ -77,14 +77,12 @@ public class NPCInteractable : MonoBehaviour
             ConversationManager.Instance.StartConversation(this);
     }
 
-    // Called locally — updates UI and broadcasts to all other clients
     public void OnBecomeActive()
     {
         OnBecomeActiveLocal();
         _networkSync?.BroadcastBecomeActive();
     }
 
-    // Called by NPCNetworkSync ClientRpc on remote clients (no re-broadcast)
     public void OnBecomeActiveLocal()
     {
         _isActive = true;
@@ -94,41 +92,35 @@ public class NPCInteractable : MonoBehaviour
         if (transcriptLabel != null) transcriptLabel.text = "";
     }
 
-    // Called locally — updates UI and broadcasts to all other clients
     public void OnBecomeInactive()
     {
         OnBecomeInactiveLocal();
         _networkSync?.BroadcastBecomeInactive();
     }
 
-    // Called by NPCNetworkSync ClientRpc on remote clients (no re-broadcast)
     public void OnBecomeInactiveLocal()
     {
         _isActive = false;
         SetIdleState();
     }
 
-    // Called locally — updates UI and broadcasts to all other clients
     public void SetStatus(string msg)
     {
         SetStatusLocal(msg);
         _networkSync?.BroadcastStatus(msg);
     }
 
-    // Called by NPCNetworkSync ClientRpc on remote clients (no re-broadcast)
     public void SetStatusLocal(string msg)
     {
         if (statusLabel != null) statusLabel.text = msg;
     }
 
-    // Called locally — updates UI and broadcasts to all other clients
     public void SetTranscript(string msg)
     {
         SetTranscriptLocal(msg);
         _networkSync?.BroadcastTranscript(msg);
     }
 
-    // Called by NPCNetworkSync ClientRpc on remote clients (no re-broadcast)
     public void SetTranscriptLocal(string msg)
     {
         if (transcriptLabel != null) transcriptLabel.text = msg;

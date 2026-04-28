@@ -1,14 +1,11 @@
 using UnityEngine;
 using Unity.Netcode;
 
-// Add this alongside NPCInteractable on the same GameObject, then add a NetworkObject too.
-// NPCInteractable routes all state changes through here so every client stays in sync.
 [RequireComponent(typeof(NPCInteractable))]
 public class NPCNetworkSync : NetworkBehaviour
 {
     private NPCInteractable _npc;
 
-    // Tracks active state so late-joining clients see the NPC correctly
     private NetworkVariable<bool> _isInConversation = new NetworkVariable<bool>(
         false,
         NetworkVariableReadPermission.Everyone,

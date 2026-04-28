@@ -51,7 +51,6 @@ public class FlyController : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        // Remote players don't run input or movement — NetworkTransform handles their position
         if (!IsOwner) enabled = false;
     }
 

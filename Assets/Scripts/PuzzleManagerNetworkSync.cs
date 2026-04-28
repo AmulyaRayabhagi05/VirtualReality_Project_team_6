@@ -1,9 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
 
-// Add this alongside PuzzleAssemblyManager on the same GameObject, then add a NetworkObject too.
-// PuzzleAssemblyManager stays a plain MonoBehaviour so its input handling is never affected by
-// network state. This script handles only the sync layer.
 [RequireComponent(typeof(PuzzleAssemblyManager))]
 public class PuzzleManagerNetworkSync : NetworkBehaviour
 {
@@ -24,7 +21,6 @@ public class PuzzleManagerNetworkSync : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
-        // When a new client connects after pieces are already placed, push the current state to them.
         NetworkManager.OnClientConnectedCallback += OnClientConnected;
     }
 
@@ -64,7 +60,6 @@ public class PuzzleManagerNetworkSync : NetworkBehaviour
     [ClientRpc]
     private void BroadcastPlacedClientRpc(int pieceIndex, ClientRpcParams clientRpcParams = default)
     {
-        // ForcePlacePiece is a no-op if the piece is already placed (handles the placing client)
         _manager.ForcePlacePiece(pieceIndex);
     }
 }

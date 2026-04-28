@@ -2,8 +2,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Place this on a GameObject with a NetworkObject in every scene.
-// When any player changes floor, the server migrates all clients together.
 public class NetworkSceneLoader : NetworkBehaviour
 {
     public static NetworkSceneLoader Instance { get; private set; }
@@ -18,8 +16,6 @@ public class NetworkSceneLoader : NetworkBehaviour
         if (Instance == this) Instance = null;
     }
 
-    // Call from anywhere. In multiplayer all clients change scene together.
-    // Falls back to local load when not networked (single-player / editor).
     public static void Load(string sceneName)
     {
         var nm = NetworkManager.Singleton;
