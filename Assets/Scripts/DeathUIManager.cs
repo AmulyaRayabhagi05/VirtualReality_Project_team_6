@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class DeathUIManager : MonoBehaviour
 {
@@ -87,12 +88,12 @@ public class DeathUIManager : MonoBehaviour
         Debug.Log("Back button clicked");
         HideDeathScreen();
 
+        PlayerSceneHandler.RestoreMovementOnLoad = true;
+
         if (!string.IsNullOrEmpty(backSceneName))
-        {
-            SceneManager.LoadScene(backSceneName);
-        }else{
+            NetworkSceneLoader.Load(backSceneName);
+        else
             Debug.LogWarning("backSceneName is empty");
-        }
     }
 
     public void ShowDeathScreen()

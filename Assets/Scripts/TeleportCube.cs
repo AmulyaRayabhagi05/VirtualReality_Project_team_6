@@ -1,8 +1,9 @@
 using UnityEngine;
+using Unity.Netcode;
+
 public class TeleportCube : MonoBehaviour
 {
     public Transform teleportDestination;
-    public GameObject character;
     public GameObject xrCardboardRig;
     public MonoBehaviour movementScript;
     public PlaneMenuController menuController;
@@ -11,7 +12,7 @@ public class TeleportCube : MonoBehaviour
 
     void Update()
     {
-        bool controllerInput = Input.GetButtonDown("js2")  || Input.GetKeyDown(KeyCode.M);
+        bool controllerInput = Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.M);
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
@@ -21,25 +22,53 @@ public class TeleportCube : MonoBehaviour
             {
                 Debug.Log("reticle on cube");
                 if (controllerInput)
-                {
                     Teleport();
-                }
             }
         }
     }
 
     void Teleport()
     {
-        xrCardboardRig.transform.position = teleportDestination.position;
+        GameObject player = GetLocalPlayerObject() ?? xrCardboardRig;
+        if (player == null)
+        {
+            Debug.LogWarning("[TeleportCube] No player object found to teleport.");
+            return;
+        }
 
-        if (movementScript != null){
-            movementScript.enabled = false;
-	}
-        
-        if (menuController != null){
-            menuController.SetMovementScript(movementScript);
-	}
+        var cc = player.GetComponentInChildren<CharacterController>();
+        if (cc != null) cc.enabled = false;
+        player.transform.position = teleportDestination.position;
+
+        var pm = player.GetComponentInChildren<PlayerMovement>();
+        if (pm != null) pm.enabled = false;
+
+        if (menuController != null)
+            menuController.NotifyEnteredPlane(player);
 
         Debug.Log("Teleported inside plane");
+    }
+
+    internal static GameObject GetLocalPlayerObject()
+    {
+        var nm = NetworkManager.Singleton;
+        if (nm != null && (nm.IsClient || nm.IsHost))
+            return nm.LocalClient?.PlayerObject?.gameObject;
+        return null;
+    }
+
+    internal static void WarpGameObject(GameObject go, Vector3 position)
+    {
+        var cc = go.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+            go.transform.position = position;
+            cc.enabled = true;
+        }
+        else
+        {
+            go.transform.position = position;
+        }
     }
 }

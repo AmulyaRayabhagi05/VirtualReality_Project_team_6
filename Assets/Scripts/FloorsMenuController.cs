@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class FloorsMenuController : MonoBehaviour
 {
@@ -70,13 +69,13 @@ public class FloorsMenuController : MonoBehaviour
     public void LoadFloorOne()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("FirstFloor");
+        NetworkSceneLoader.Load("FirstFloor");
     }
 
     public void LoadFloorTwo()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("SecondFloor");
+        NetworkSceneLoader.Load("SecondFloor");
     }
 
     private void HandleNavigation()
@@ -131,6 +130,8 @@ public class FloorsMenuController : MonoBehaviour
 
     private void PositionMenuInFrontOfPlayer()
     {
+        if (_vrCamera == null || !_vrCamera.gameObject.activeInHierarchy)
+            _vrCamera = Camera.main;
         if (_vrCamera == null) return;
 
         Transform cam = _vrCamera.transform;

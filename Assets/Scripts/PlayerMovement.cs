@@ -1,7 +1,8 @@
 using UnityEngine;
+using Unity.Netcode;
 
 [RequireComponent(typeof(CharacterController))]
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [Header("Settings")]
     public float moveSpeed = 10f;
@@ -17,8 +18,16 @@ public class PlayerMovement : MonoBehaviour
         cc.skinWidth = 0.01f;
     }
 
+    public override void OnNetworkSpawn()
+    {
+        // Only the owner drives the CharacterController; remote players are moved by NetworkTransform
+        cc.enabled = IsOwner;
+    }
+
     void Update()
     {
+        if (!IsOwner) return;
+
         if (cc.isGrounded)
         {
             verticalVelocity = -1f;

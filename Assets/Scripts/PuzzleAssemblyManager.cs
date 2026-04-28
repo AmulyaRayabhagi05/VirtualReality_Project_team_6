@@ -24,6 +24,9 @@ public class PuzzleAssemblyManager : MonoBehaviour
     private PuzzleAssemblyPiece _heldPiece;
     private bool _completed;
 
+    // Fired when this client places a piece; index matches the pieces array
+    public event System.Action<int> OnPiecePlacedLocally;
+
     public bool IsCompleted
     {
         get { return _completed; }
@@ -125,9 +128,12 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
     private void Update()
     {
-        if (sourceCamera == null)
+        // Re-acquire if null or if the camera was deactivated (e.g. a remote player's camera
+        // was briefly MainCamera when their prefab spawned, then got turned off by PlayerNetworkSetup)
+        if (sourceCamera == null || !sourceCamera.gameObject.activeInHierarchy)
         {
-            return;
+            sourceCamera = Camera.main;
+            if (sourceCamera == null) return;
         }
 
         if (IsPickupPressed())
@@ -203,6 +209,15 @@ public class PuzzleAssemblyManager : MonoBehaviour
             return;
         }
 
+        // Ignore pieces that belong to a different PuzzleAssemblyManager in the scene.
+        // Without this check, two managers both respond to every key press and can steal
+        // each other's pieces, breaking placement and network sync.
+        if (GetPieceIndex(piece) < 0)
+        {
+            LogDebug($"Pickup ray hit {piece.PieceId} which belongs to a different puzzle manager.");
+            return;
+        }
+
         LogDebug($"Pickup matched puzzle piece {piece.PieceId}.");
 
         TryPickUp(piece);
@@ -273,7 +288,42 @@ public class PuzzleAssemblyManager : MonoBehaviour
         {
             RefreshPlacedOutlines();
             CheckCompletion();
+
+            int index = GetPieceIndex(pieceToDrop);
+            if (index >= 0)
+                OnPiecePlacedLocally?.Invoke(index);
         }
+    }
+
+    // Called by PuzzleManagerNetworkSync to apply a placement that happened on another client
+    public void ForcePlacePiece(int index)
+    {
+        if (index < 0 || index >= pieces.Length) return;
+        if (pieces[index] == null || pieces[index].IsPlaced) return;
+
+        // If we were holding this piece locally (e.g. two players grabbed the same piece),
+        // clear the reference so the next R press opens a fresh pickup instead of a ghost drop.
+        if (_heldPiece == pieces[index])
+            _heldPiece = null;
+
+        pieces[index].Place();
+        RefreshPlacedOutlines();
+        CheckCompletion();
+    }
+
+    public int GetPieceCount() => pieces != null ? pieces.Length : 0;
+
+    public bool IsPiecePlaced(int index) =>
+        pieces != null && index >= 0 && index < pieces.Length &&
+        pieces[index] != null && pieces[index].IsPlaced;
+
+    private int GetPieceIndex(PuzzleAssemblyPiece piece)
+    {
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (pieces[i] == piece) return i;
+        }
+        return -1;
     }
 
     private void ApplyHeldRotation()
