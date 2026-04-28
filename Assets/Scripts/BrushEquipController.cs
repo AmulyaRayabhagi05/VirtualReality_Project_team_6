@@ -31,14 +31,24 @@ public class BrushEquipController : MonoBehaviour
 
     public Ray GetCurrentReticleRay()
     {
+        if (RaycastPointer.instance != null)
+            return RaycastPointer.instance.GetRay();
         return new Ray(sourceCamera.transform.position, sourceCamera.transform.forward);
     }
+
+    [SerializeField] private string brushObjectName = "Paint Brush";
 
     private void Awake()
     {
         if (sourceCamera == null)
         {
             sourceCamera = Camera.main;
+        }
+
+        if (brushTransform == null && !string.IsNullOrEmpty(brushObjectName))
+        {
+            GameObject found = GameObject.Find(brushObjectName);
+            if (found != null) brushTransform = found.transform;
         }
 
         if (brushTransform != null)
@@ -74,6 +84,12 @@ public class BrushEquipController : MonoBehaviour
 
     private void Update()
     {
+        if (sourceCamera == null || !sourceCamera.gameObject.activeInHierarchy)
+        {
+            sourceCamera = Camera.main;
+            if (sourceCamera == null) return;
+        }
+
         if (brushTransform == null || brushAnchor == null || sourceCamera == null)
         {
             return;

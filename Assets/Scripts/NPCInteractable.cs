@@ -30,14 +30,17 @@ public class NPCInteractable : MonoBehaviour
     private float _lastActionTime = -10f;
     private const float ACTION_COOLDOWN = 0.5f;
 
+    private NPCNetworkSync _networkSync;
+
     private void Start()
     {
+        _networkSync = GetComponent<NPCNetworkSync>();
+
         if (Camera.main != null)
             _playerHead = Camera.main.transform;
 
         if (actionButton != null)
         {
-            // Remove before adding to prevent duplicate listeners if Start runs more than once
             actionButton.onClick.RemoveListener(OnActionButtonPressed);
             actionButton.onClick.AddListener(OnActionButtonPressed);
         }
@@ -50,7 +53,6 @@ public class NPCInteractable : MonoBehaviour
 
     private void Update()
     {
-        // Retry each frame until the camera is found (handles VR rigs that initialise late)
         if (_playerHead == null && Camera.main != null)
             _playerHead = Camera.main.transform;
 
@@ -60,7 +62,6 @@ public class NPCInteractable : MonoBehaviour
 
     private void OnActionButtonPressed()
     {
-        // Prevent double-invocation from multiple input sources firing in the same press
         if (Time.time - _lastActionTime < ACTION_COOLDOWN) return;
         _lastActionTime = Time.time;
 
@@ -78,6 +79,12 @@ public class NPCInteractable : MonoBehaviour
 
     public void OnBecomeActive()
     {
+        OnBecomeActiveLocal();
+        _networkSync?.BroadcastBecomeActive();
+    }
+
+    public void OnBecomeActiveLocal()
+    {
         _isActive = true;
         if (npcNameLabel != null) npcNameLabel.text = npcName;
         if (actionButtonLabel != null) actionButtonLabel.text = "End";
@@ -87,16 +94,34 @@ public class NPCInteractable : MonoBehaviour
 
     public void OnBecomeInactive()
     {
+        OnBecomeInactiveLocal();
+        _networkSync?.BroadcastBecomeInactive();
+    }
+
+    public void OnBecomeInactiveLocal()
+    {
         _isActive = false;
         SetIdleState();
     }
 
     public void SetStatus(string msg)
     {
+        SetStatusLocal(msg);
+        _networkSync?.BroadcastStatus(msg);
+    }
+
+    public void SetStatusLocal(string msg)
+    {
         if (statusLabel != null) statusLabel.text = msg;
     }
 
     public void SetTranscript(string msg)
+    {
+        SetTranscriptLocal(msg);
+        _networkSync?.BroadcastTranscript(msg);
+    }
+
+    public void SetTranscriptLocal(string msg)
     {
         if (transcriptLabel != null) transcriptLabel.text = msg;
     }

@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class PlaneMenuController : MonoBehaviour
 {
@@ -31,7 +30,6 @@ public class PlaneMenuController : MonoBehaviour
 
     private CanvasGroup menuPanelGroup;
     private Canvas menuCanvas;
-    private GameObject currentGazedButton = null;
 
     void Start()
     {
@@ -71,7 +69,6 @@ public class PlaneMenuController : MonoBehaviour
             if (_openCooldown <= 0f)
             {
                 HandleConfirm();
-                HandleGazeAndController();
             }
         }
     }
@@ -136,65 +133,6 @@ public class PlaneMenuController : MonoBehaviour
         );
     }
 
-    void HandleGazeAndController()
-    {
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
-        {
-            position = new Vector2(Screen.width / 2f, Screen.height / 2f)
-        };
-
-        List<RaycastResult> results = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, results);
-
-        foreach (var r in results)
-        {
-            Debug.Log("Gaze hit:" + r.gameObject.name);
-        }
-
-        if (results.Count > 0)
-        {
-            GameObject gazedButton = null;
-            foreach (var r in results)
-            {
-                Button btn = r.gameObject.GetComponent<Button>();
-                if (btn != null)
-                {
-                    gazedButton = r.gameObject;
-                    break;
-                }
-            }
-
-            if (gazedButton != null)
-            {
-                currentGazedButton = gazedButton;
-                Debug.Log("looking at button:" + gazedButton.name);
-
-                if (Input.GetButtonDown("js1"))
-                {
-
-                    if (gazedButton.name == "CloseMenu")
-                    {
-                        HideMenu();
-                    }
-                    else if (gazedButton.name == "Outside")
-                    {
-                        GoOutside();
-                    }
-                    else if (gazedButton.name == "StartSim")
-                    {
-                        StartSimulation();
-                    }
-                    Button btn = gazedButton.GetComponent<Button>();
-                    if (btn != null) btn.onClick.Invoke();
-                }
-            }
-            else
-            {
-                currentGazedButton = null;
-            }
-        }
-    }
-
     public void ShowMenu()
     {
         if (movementScript != null)
@@ -232,6 +170,7 @@ public class PlaneMenuController : MonoBehaviour
         menuPanelGroup.blocksRaycasts = false;
     }
 
+    private GameObject _frozenPlayer;
     private MonoBehaviour cachedMovementScript;
 
     public void SetMovementScript(MonoBehaviour script)
@@ -239,35 +178,39 @@ public class PlaneMenuController : MonoBehaviour
         cachedMovementScript = script;
     }
 
+    // Called by TeleportCube when the player enters the plane.
+    public void NotifyEnteredPlane(GameObject player)
+    {
+        _frozenPlayer = player;
+    }
+
     public void GoOutside()
     {
-        MonoBehaviour scriptToEnable = movementScript != null ? movementScript : cachedMovementScript;
+        GameObject player = _frozenPlayer ?? TeleportCube.GetLocalPlayerObject() ?? xrCardboardRig;
 
-        if (xrCardboardRig != null && outsideDestination != null)
+        if (player != null && outsideDestination != null)
         {
-            xrCardboardRig.transform.position = outsideDestination.position;
+            player.transform.position = outsideDestination.position;
 
-            if (scriptToEnable != null)
-            {
-                scriptToEnable.enabled = true;
-                Debug.Log("Movement re-enabled");
-            }
+            var cc = player.GetComponentInChildren<CharacterController>();
+            if (cc != null) cc.enabled = true;
+
+            var pm = player.GetComponentInChildren<PlayerMovement>();
+            if (pm != null)
+                pm.enabled = true;
             else
             {
-                Debug.LogError("No movement script found");
+                MonoBehaviour scriptToEnable = movementScript != null ? movementScript : cachedMovementScript;
+                if (scriptToEnable != null) scriptToEnable.enabled = true;
             }
         }
-        else
-        {
-            Debug.LogError("xrCardboardRig or outsideDestination is nul");
-        }
 
+        _frozenPlayer = null;
         HideMenu();
     }
 
     public void StartSimulation()
     {
-        Debug.Log("Starting Simulation");
-        SceneManager.LoadScene("Flight");
+        NetworkSceneLoader.Load("Flight");
     }
 }

@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
-public class FlyController : MonoBehaviour
+public class FlyController : NetworkBehaviour
 {
     private Camera mainCamera;
 
@@ -48,6 +49,11 @@ public class FlyController : MonoBehaviour
     private float pitch = 0f;
     private float yaw   = 0f;
 
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) enabled = false;
+    }
+
     void Start()
     {
         targetRotation = transform.rotation;
@@ -57,7 +63,7 @@ public class FlyController : MonoBehaviour
 
         activeMode = ResolveInputMode();
         cameraTransform = Camera.main.transform;
-        
+
         if (activeMode ==InputMode.GyroscopePhone)
         {
             Input.gyro.enabled = true;

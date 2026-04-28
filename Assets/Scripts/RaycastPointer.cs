@@ -67,6 +67,10 @@ public class RaycastPointer : MonoBehaviour
 
     void Update()
     {
+        if (gazeCamera == null || !gazeCamera.gameObject.activeInHierarchy)
+            return;
+        instance = this;
+
         Vector3 origin = gazeCamera.transform.position;
         Vector3 direction = gazeCamera.transform.forward;
 

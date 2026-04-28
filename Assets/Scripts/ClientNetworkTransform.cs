@@ -1,0 +1,7 @@
+using Unity.Netcode.Components;
+
+[UnityEngine.DisallowMultipleComponent]
+public class ClientNetworkTransform : NetworkTransform
+{
+    protected override bool OnIsServerAuthoritative() => false;
+}

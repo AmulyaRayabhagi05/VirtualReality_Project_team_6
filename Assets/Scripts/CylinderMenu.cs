@@ -14,7 +14,7 @@ public class CylinderOpen : MonoBehaviour
         {
             if (hit.collider.gameObject.name == "Cylinder")
             {
-                if (Input.GetButtonDown("js2"))
+                if (Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.C))
                 {
                     menuController.ShowMenu();
                 }

@@ -137,6 +137,35 @@ public class DinoTransitionController : MonoBehaviour
         }
     }
 
+    public void ApplyPhaseImmediate(int phaseIndex)
+    {
+        if (activeRoutine != null)
+        {
+            StopCoroutine(activeRoutine);
+            activeRoutine = null;
+        }
+
+        if (phaseIndex == 0)
+        {
+            phase = Phase.Idle;
+            skeletonDino.SetActive(true);
+            fleshDino.SetActive(false);
+            if (skeletonAnimator) skeletonAnimator.enabled = false;
+            if (fleshAnimator) fleshAnimator.enabled = false;
+        }
+        else
+        {
+            phase = Phase.WalkingFleshed;
+            skeletonDino.SetActive(false);
+            fleshDino.SetActive(true);
+            if (fleshAnimator != null)
+            {
+                fleshAnimator.enabled = true;
+                fleshAnimator.Play("Walk", 0, 0f);
+            }
+        }
+    }
+
     void Run(IEnumerator routine)
     {
         if (activeRoutine != null)

@@ -24,6 +24,8 @@ public class PuzzleAssemblyManager : MonoBehaviour
     private PuzzleAssemblyPiece _heldPiece;
     private bool _completed;
 
+    public event System.Action<int> OnPiecePlacedLocally;
+
     public bool IsCompleted
     {
         get { return _completed; }
@@ -125,9 +127,10 @@ public class PuzzleAssemblyManager : MonoBehaviour
 
     private void Update()
     {
-        if (sourceCamera == null)
+        if (sourceCamera == null || !sourceCamera.gameObject.activeInHierarchy)
         {
-            return;
+            sourceCamera = Camera.main;
+            if (sourceCamera == null) return;
         }
 
         if (IsPickupPressed())
@@ -203,6 +206,12 @@ public class PuzzleAssemblyManager : MonoBehaviour
             return;
         }
 
+        if (GetPieceIndex(piece) < 0)
+        {
+            LogDebug($"Pickup ray hit {piece.PieceId} which belongs to a different puzzle manager.");
+            return;
+        }
+
         LogDebug($"Pickup matched puzzle piece {piece.PieceId}.");
 
         TryPickUp(piece);
@@ -273,7 +282,39 @@ public class PuzzleAssemblyManager : MonoBehaviour
         {
             RefreshPlacedOutlines();
             CheckCompletion();
+
+            int index = GetPieceIndex(pieceToDrop);
+            if (index >= 0)
+                OnPiecePlacedLocally?.Invoke(index);
         }
+    }
+
+    public void ForcePlacePiece(int index)
+    {
+        if (index < 0 || index >= pieces.Length) return;
+        if (pieces[index] == null || pieces[index].IsPlaced) return;
+
+        if (_heldPiece == pieces[index])
+            _heldPiece = null;
+
+        pieces[index].Place();
+        RefreshPlacedOutlines();
+        CheckCompletion();
+    }
+
+    public int GetPieceCount() => pieces != null ? pieces.Length : 0;
+
+    public bool IsPiecePlaced(int index) =>
+        pieces != null && index >= 0 && index < pieces.Length &&
+        pieces[index] != null && pieces[index].IsPlaced;
+
+    private int GetPieceIndex(PuzzleAssemblyPiece piece)
+    {
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (pieces[i] == piece) return i;
+        }
+        return -1;
     }
 
     private void ApplyHeldRotation()
