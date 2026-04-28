@@ -1,8 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
 
-// Attach to the player prefab. Disables camera and audio for remote players
-// and shows/hides the avatar mesh accordingly.
 public class PlayerNetworkSetup : NetworkBehaviour
 {
     [Header("Disable for remote players")]
@@ -15,6 +13,12 @@ public class PlayerNetworkSetup : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (IsOwner)
+        {
+            GameObject lobbyCamera = GameObject.Find("LobbyCamera");
+            if (lobbyCamera != null) lobbyCamera.SetActive(false);
+        }
+
         if (playerCamera != null)
             playerCamera.gameObject.SetActive(IsOwner);
 
