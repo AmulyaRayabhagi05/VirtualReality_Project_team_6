@@ -308,6 +308,24 @@ public class PuzzleAssemblyManager : MonoBehaviour
         pieces != null && index >= 0 && index < pieces.Length &&
         pieces[index] != null && pieces[index].IsPlaced;
 
+    public void ResetUnplacedPieces()
+    {
+        _heldPiece = null;
+
+        if (pieces == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (pieces[i] != null && !pieces[i].IsPlaced)
+            {
+                pieces[i].ResetToStartPose();
+            }
+        }
+    }
+
     private int GetPieceIndex(PuzzleAssemblyPiece piece)
     {
         for (int i = 0; i < pieces.Length; i++)

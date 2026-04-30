@@ -10,6 +10,7 @@ using UnityEngine.XR;
 public class ReticleJoystickClick : MonoBehaviour
 {
     [SerializeField] private string clickButton = "js2";
+    [SerializeField] private KeyCode clickKey = KeyCode.F;
     [SerializeField] private bool debugReticleClick;
     public static bool IsJustOpened { get; private set; }
 
@@ -32,7 +33,7 @@ public class ReticleJoystickClick : MonoBehaviour
 
     private void Update()
     {
-        if (_eventSystem == null || !Input.GetButtonDown(clickButton))
+        if (_eventSystem == null || (!Input.GetButtonDown(clickButton) && !Input.GetKeyDown(clickKey)))
         {
             return;
         }
@@ -42,7 +43,7 @@ public class ReticleJoystickClick : MonoBehaviour
             return;
         }
 
-        LogDebug($"Click input received: {clickButton}");
+        LogDebug($"Click input received: {clickButton} or {clickKey}");
 
         if (_pointerEventData == null)
         {

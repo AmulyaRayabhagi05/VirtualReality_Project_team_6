@@ -19,6 +19,8 @@ public class PuzzleAssemblyPiece : MonoBehaviour, IPointerClickHandler
     private bool _isPlaced;
     private Quaternion _holdRotationOffset = Quaternion.identity;
     private Quaternion _additionalHoldRotation = Quaternion.identity;
+    private Vector3 _startPosition;
+    private Quaternion _startRotation;
     private static readonly Quaternion PickupRotationOffset = Quaternion.Euler(-90f, 0f, 0f);
 
     public bool IsPlaced
@@ -43,6 +45,8 @@ public class PuzzleAssemblyPiece : MonoBehaviour, IPointerClickHandler
 
     private void Awake()
     {
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
         _rigidbody = GetComponent<Rigidbody>();
         _colliders = GetComponentsInChildren<Collider>(true);
         CacheCompletedVisualComponents();
@@ -174,6 +178,34 @@ public class PuzzleAssemblyPiece : MonoBehaviour, IPointerClickHandler
     {
         _isHeld = false;
         Debug.LogWarning($"[PuzzleAssemblyPiece] Drop {pieceId} at {transform.position}");
+
+        if (_rigidbody != null)
+        {
+            _rigidbody.isKinematic = false;
+        }
+
+        SetCollidersEnabled(true);
+    }
+
+    public void ResetToStartPose()
+    {
+        if (_isPlaced)
+        {
+            return;
+        }
+
+        _isHeld = false;
+        _additionalHoldRotation = Quaternion.identity;
+        _holdRotationOffset = PickupRotationOffset;
+
+        if (_rigidbody != null)
+        {
+            _rigidbody.isKinematic = true;
+            _rigidbody.linearVelocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+        }
+
+        transform.SetPositionAndRotation(_startPosition, _startRotation);
 
         if (_rigidbody != null)
         {
