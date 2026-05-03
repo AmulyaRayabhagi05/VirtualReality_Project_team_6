@@ -2234,7 +2234,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 5.193755, y: 0, z: 13.886688, w: 4.813073}
+  m_margin: {x: 5.193755, y: 0, z: 13.980832, w: 4.813073}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0
@@ -5362,15 +5362,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 155.5
+      value: 14.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10
+      value: 18.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -299.74
+      value: -193.1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -5414,7 +5414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.59
+      value: 12.6
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalPosition.z
