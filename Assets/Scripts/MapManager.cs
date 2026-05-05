@@ -8,6 +8,8 @@ public class MapManager : MonoBehaviour
     public Button dinosaurButton;
     public Button planeButton;
     public Button pyramidButton;
+    public Button greeceButton;
+    public Button JapanButton;
 
     [Header("Info Panel Controller ")]
     public InfoPanelController infoPanelController;
@@ -32,6 +34,20 @@ public class MapManager : MonoBehaviour
     public string pyramidTitle = "Pyramid";
     [TextArea(3, 10)]
     public string pyramidText = "Test";
+
+    [Header("Greece Info")]
+    public Sprite greeceImage;
+    [TextArea(3, 6)]
+    public string greeceTitle = "Greece";
+    [TextArea(3, 10)]
+    public string greeceText = "Test";
+
+    [Header("Japan Info")]
+    public Sprite japanImage;
+    [TextArea(3, 6)]
+    public string japanTitle = "Japan";
+    [TextArea(3, 10)]
+    public string japanText = "Test";
 
     private MapNetworkSync _networkSync;
 
@@ -59,6 +75,8 @@ public class MapManager : MonoBehaviour
         if (dinosaurButton != null) dinosaurButton.onClick.AddListener(OnDinosaurClicked);
         if (planeButton != null) planeButton.onClick.AddListener(OnPlaneClicked);
         if (pyramidButton != null) pyramidButton.onClick.AddListener(OnPyramidClicked);
+        if (greeceButton != null) greeceButton.onClick.AddListener(OnGreeceClicked);
+        if (japanButton != null) japanButton.onClick.AddListener(OnJapanClicked);
     }
 
     // Called by MapNetworkSync on every client when the panel selection changes.
@@ -77,6 +95,8 @@ public class MapManager : MonoBehaviour
             case 0: infoPanelController.ShowInfo(dinosaurImage, dinosaurTitle, dinosaurText); break;
             case 1: infoPanelController.ShowInfo(planeImage, planeTitle, planeText); break;
             case 2: infoPanelController.ShowInfo(pyramidImage, pyramidTitle, pyramidText); break;
+            case 3: infoPanelController.ShowInfo(greeceImage, greeceTitle, greeceText); break;
+            case 4: infoPanelController.ShowInfo(japanImage, japanTitle, japanText); break;
         }
     }
 
@@ -85,6 +105,8 @@ public class MapManager : MonoBehaviour
         if (dinosaurButton != null) dinosaurButton.gameObject.SetActive(visible);
         if (planeButton != null) planeButton.gameObject.SetActive(visible);
         if (pyramidButton != null) pyramidButton.gameObject.SetActive(visible);
+        if (greeceButton != null) greeceButton.gameObject.SetActive(visible);
+        if (japanButton != null) japanButton.gameObject.SetActive(visible);
     }
 
     void OnDinosaurClicked()
