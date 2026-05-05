@@ -9,7 +9,7 @@ public class MapManager : MonoBehaviour
     public Button planeButton;
     public Button pyramidButton;
     public Button greeceButton;
-    public Button JapanButton;
+    public Button japanButton;
 
     [Header("Info Panel Controller ")]
     public InfoPanelController infoPanelController;
@@ -131,5 +131,19 @@ public class MapManager : MonoBehaviour
             _networkSync.RequestShowPanel(2);
         else
             ApplyPanelSelection(2);
+    }
+    void OnJapanClicked()
+    {
+        if (_networkSync != null && _networkSync.IsSpawned)
+            _networkSync.RequestShowPanel(3);
+        else
+            ApplyPanelSelection(3);
+    }
+    void OnGreeceClicked()
+    {
+        if (_networkSync != null && _networkSync.IsSpawned)
+            _networkSync.RequestShowPanel(4);
+        else
+            ApplyPanelSelection(4);
     }
 }
