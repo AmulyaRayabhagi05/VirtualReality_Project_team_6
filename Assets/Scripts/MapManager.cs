@@ -10,6 +10,8 @@ public class MapManager : MonoBehaviour
     public Button pyramidButton;
     public Button greeceButton;
     public Button japanButton;
+    public Button carButton;
+    public Button phoneButton;
 
     [Header("Info Panel Controller ")]
     public InfoPanelController infoPanelController;
@@ -49,6 +51,20 @@ public class MapManager : MonoBehaviour
     [TextArea(3, 10)]
     public string japanText = "Test";
 
+    [Header("Car Info")]
+    public Sprite carImage;
+    [TextArea(3, 6)]
+    public string carTitle = "Car";
+    [TextArea(3, 10)]
+    public string carText = "Test";
+
+    [Header("Phone Info")]
+    public Sprite phoneImage;
+    [TextArea(3, 6)]
+    public string phoneTitle = "Phone";
+    [TextArea(3, 10)]
+    public string phoneText = "Test";
+
     private MapNetworkSync _networkSync;
 
     void Start()
@@ -77,6 +93,8 @@ public class MapManager : MonoBehaviour
         if (pyramidButton != null) pyramidButton.onClick.AddListener(OnPyramidClicked);
         if (greeceButton != null) greeceButton.onClick.AddListener(OnGreeceClicked);
         if (japanButton != null) japanButton.onClick.AddListener(OnJapanClicked);
+        if (carButton != null) carButton.onClick.AddListener(OnCarClicked);
+        if (phoneButton != null) phoneButton.onClick.AddListener(OnPhoneClicked);
     }
 
     // Called by MapNetworkSync on every client when the panel selection changes.
@@ -97,6 +115,8 @@ public class MapManager : MonoBehaviour
             case 2: infoPanelController.ShowInfo(pyramidImage, pyramidTitle, pyramidText); break;
             case 3: infoPanelController.ShowInfo(greeceImage, greeceTitle, greeceText); break;
             case 4: infoPanelController.ShowInfo(japanImage, japanTitle, japanText); break;
+            case 5: infoPanelController.ShowInfo(carImage, carTitle, carText); break;
+            case 6: infoPanelController.ShowInfo(phoneImage, phoneTitle, phoneText); break;
         }
     }
 
@@ -107,6 +127,8 @@ public class MapManager : MonoBehaviour
         if (pyramidButton != null) pyramidButton.gameObject.SetActive(visible);
         if (greeceButton != null) greeceButton.gameObject.SetActive(visible);
         if (japanButton != null) japanButton.gameObject.SetActive(visible);
+        if (carButton != null) carButton.gameObject.SetActive(visible);     
+        if (phoneButton != null) phoneButton.gameObject.SetActive(visible);
     }
 
     void OnDinosaurClicked()
@@ -145,5 +167,19 @@ public class MapManager : MonoBehaviour
             _networkSync.RequestShowPanel(4);
         else
             ApplyPanelSelection(4);
+    }
+    void OnCarClicked()
+    {
+        if (_networkSync != null && _networkSync.IsSpawned)
+            _networkSync.RequestShowPanel(5);
+        else
+            ApplyPanelSelection(5);
+    }
+    void OnPhoneClicked()
+    {
+        if (_networkSync != null && _networkSync.IsSpawned)
+            _networkSync.RequestShowPanel(6);
+        else
+            ApplyPanelSelection(6);
     }
 }
