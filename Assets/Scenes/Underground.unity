@@ -1745,6 +1745,10 @@ MonoBehaviour:
   dinosaurButton: {fileID: 135882383}
   planeButton: {fileID: 1588741260}
   pyramidButton: {fileID: 1844773689}
+  greeceButton: {fileID: 0}
+  japanButton: {fileID: 0}
+  carButton: {fileID: 0}
+  phoneButton: {fileID: 0}
   infoPanelController: {fileID: 1007438947}
   dinosaurImage: {fileID: 21300000, guid: 0c95fe3c04607dc4a8caa4f47f83faad, type: 3}
   dinosaurTitle: Dinosaur
@@ -1766,6 +1770,18 @@ MonoBehaviour:
     by ancient builders to honor their kings and prepare them for the journey beyond.
     Explore the mysterious halls and solve the puzzles to unlock a secret path that
     leads even deeper into the heart of the pyramid.
+  greeceImage: {fileID: 0}
+  greeceTitle: Greece
+  greeceText: Test
+  japanImage: {fileID: 0}
+  japanTitle: Japan
+  japanText: Test
+  carImage: {fileID: 0}
+  carTitle: Car
+  carText: Test
+  phoneImage: {fileID: 0}
+  phoneTitle: Phone
+  phoneText: Test
 --- !u!65 &326932030
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6076,6 +6092,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfoPanelController
   panelRoot: {fileID: 1007438945}
+  gazeCamera: {fileID: 0}
+  placeInFrontOfCamera: 1
+  distanceFromCamera: 1.75
+  verticalOffset: -0.05
   closeButton: {fileID: 1988755003}
   displayImage: {fileID: 97323744}
   titleText: {fileID: 1870871594}
@@ -10296,6 +10316,158 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 901545384655155356, guid: a8ad31da5d47353469f82df604821ab0, type: 3}
   m_PrefabInstance: {fileID: 1661293599}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1664662296
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 11.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -17.7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_Name
+      value: basement tablet stand
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 1151388028547126963, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.49
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1664662301}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1664662300}
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1664662298}
+  m_SourcePrefab: {fileID: 100100000, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+--- !u!1 &1664662297 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+  m_PrefabInstance: {fileID: 1664662296}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1664662298
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664662297}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2432090755550338912, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+--- !u!1 &1664662299 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+  m_PrefabInstance: {fileID: 1664662296}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1664662300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664662299}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.44705883, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &1664662301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664662299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feead45352d734d2289ee9a7666c370c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InfoStandTrigger
+  title: Egyptian Basement
+  body: 'This is where you see the mummmy of the egypt!. This is your reward for
+    intelligently solving the puzzle wise one, you get to see the secrets the egyptians
+    are hiding.  '
 --- !u!1 &1682340312 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1895212641966680, guid: 96ee56c28689b3048bda2e42ba78567d, type: 3}
@@ -13984,6 +14156,7 @@ SceneRoots:
   - {fileID: 1357820934}
   - {fileID: 589419012}
   - {fileID: 1351146914}
+  - {fileID: 1664662296}
   - {fileID: 737861581}
   - {fileID: 326932033}
   - {fileID: 1538519219}

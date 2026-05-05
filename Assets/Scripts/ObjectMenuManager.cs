@@ -62,8 +62,8 @@ public class ObjectMenuManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        if (objectMenuCanvas != null)
-        {
+        EnsureRuntimeUI();
+        if (objectMenuCanvas != null) {
             objectMenuCanvas.gameObject.SetActive(false);
         }
     }
@@ -94,7 +94,17 @@ public class ObjectMenuManager : MonoBehaviour
         bool bPressed = Input.GetButton("js1");
         bool bDown = bPressed && !bWasPressed;
 
-        if (bDown)
+        bool keyboardSelectDown = Input.GetKeyDown(KeyCode.Return) || Input.GetMouseButtonDown(0);
+        bool selectDown = bDown || keyboardSelectDown;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CloseMenu();
+            bWasPressed = bPressed;
+            return;
+        }
+
+        if (selectDown)
         {
             if (hoveredButton == destroyButton)
             {
@@ -203,6 +213,18 @@ public class ObjectMenuManager : MonoBehaviour
             CloseMenu();
         }
 
+        EnsureRuntimeUI();
+        if (objectMenuCanvas == null)
+        {
+            Debug.LogWarning("[ObjectMenuManager] Cannot open menu: objectMenuCanvas is not set.", this);
+            return;
+        }
+
+        if (gazeCamera == null)
+        {
+            gazeCamera = Camera.main;
+        }
+
         currentTarget = target;
         menuOpen = true;
 
@@ -211,6 +233,97 @@ public class ObjectMenuManager : MonoBehaviour
         if (playerMovement != null) {
             playerMovement.SetMovementEnabled(false);
         }
+    }
+
+    void EnsureRuntimeUI()
+    {
+        // If a scene hasn't been wired in the inspector, build a minimal world-space menu at runtime.
+        if (objectMenuCanvas != null && destroyButton != null && storeButton != null && exitButton != null)
+        {
+            return;
+        }
+
+        if (gazeCamera == null)
+        {
+            gazeCamera = Camera.main;
+        }
+
+        // Canvas
+        var canvasGO = new GameObject("ObjectMenuCanvas");
+        canvasGO.transform.SetParent(transform, false);
+
+        var canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.WorldSpace;
+        canvas.worldCamera = gazeCamera;
+
+        var scaler = canvasGO.AddComponent<CanvasScaler>();
+        scaler.dynamicPixelsPerUnit = 10f;
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        var canvasRT = canvasGO.GetComponent<RectTransform>();
+        canvasRT.sizeDelta = new Vector2(350f, 220f);
+        // World-space canvases use real-world units; keep this panel reasonably sized in the scene.
+        canvasGO.transform.localScale = Vector3.one * 0.0025f;
+
+        // Panel background
+        var panelGO = new GameObject("Panel");
+        panelGO.transform.SetParent(canvasGO.transform, false);
+        var panelImg = panelGO.AddComponent<Image>();
+        panelImg.color = new Color(0f, 0f, 0f, 0.7f);
+        var panelRT = panelGO.GetComponent<RectTransform>();
+        panelRT.anchorMin = new Vector2(0.5f, 0.5f);
+        panelRT.anchorMax = new Vector2(0.5f, 0.5f);
+        panelRT.pivot = new Vector2(0.5f, 0.5f);
+        panelRT.sizeDelta = new Vector2(320f, 180f);
+        panelRT.anchoredPosition = Vector2.zero;
+
+        destroyButton = destroyButton != null ? destroyButton : CreateRuntimeButton(panelGO.transform, "DestroyButton", "Destroy", new Vector2(0f, 50f));
+        storeButton = storeButton != null ? storeButton : CreateRuntimeButton(panelGO.transform, "StoreButton", "Store", new Vector2(0f, 0f));
+        exitButton = exitButton != null ? exitButton : CreateRuntimeButton(panelGO.transform, "ExitButton", "Exit", new Vector2(0f, -50f));
+
+        objectMenuCanvas = canvas;
+        objectMenuCanvas.gameObject.SetActive(false);
+    }
+
+    Button CreateRuntimeButton(Transform parent, string name, string label, Vector2 anchoredPos)
+    {
+        var btnGO = new GameObject(name);
+        btnGO.transform.SetParent(parent, false);
+
+        var img = btnGO.AddComponent<Image>();
+        img.color = normalColor;
+
+        var btn = btnGO.AddComponent<Button>();
+        var rt = btnGO.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(260f, 45f);
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = anchoredPos;
+
+        var txtGO = new GameObject("Text");
+        txtGO.transform.SetParent(btnGO.transform, false);
+        var txt = txtGO.AddComponent<Text>();
+        txt.text = label;
+        // Unity removed Arial.ttf as a builtin font. LegacyRuntime.ttf is the supported builtin.
+        // If this ever fails (older Unity), the Text will still render with Unity's default font.
+        try
+        {
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+        }
+        catch
+        {
+            // Intentionally ignore.
+        }
+        txt.alignment = TextAnchor.MiddleCenter;
+        txt.color = Color.white;
+        var txtRT = txtGO.GetComponent<RectTransform>();
+        txtRT.anchorMin = Vector2.zero;
+        txtRT.anchorMax = Vector2.one;
+        txtRT.offsetMin = Vector2.zero;
+        txtRT.offsetMax = Vector2.zero;
+
+        return btn;
     }
 
 

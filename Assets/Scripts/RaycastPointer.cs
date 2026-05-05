@@ -65,6 +65,28 @@ public class RaycastPointer : MonoBehaviour
         lineRenderer.endColor = Color.cyan;
     }
 
+    void Start()
+    {
+        // Scenes are allowed to omit this manager; we’ll create/find one so `ObjectMenuTrigger` can open a UI.
+        if (objectMenuManager == null)
+        {
+            objectMenuManager = FindObjectOfType<ObjectMenuManager>();
+        }
+
+        if (objectMenuManager == null)
+        {
+            objectMenuManager = gameObject.AddComponent<ObjectMenuManager>();
+        }
+
+        if (objectMenuManager != null)
+        {
+            if (objectMenuManager.gazeCamera == null)
+            {
+                objectMenuManager.gazeCamera = gazeCamera;
+            }
+        }
+    }
+
     void Update()
     {
         if (gazeCamera == null || !gazeCamera.gameObject.activeInHierarchy)
@@ -94,11 +116,36 @@ public class RaycastPointer : MonoBehaviour
         HandleHighlight(didHit, hit);
 
         bool xPressed = Input.GetButton("js2");
-        if (xPressed && !xWasPressed){
+        bool zPressed = Input.GetKeyDown(KeyCode.Z);
+
+        // Global toggle: if the stand info panel is open, allow the same open input to close it.
+        if ((xPressed && !xWasPressed) || zPressed)
+        {
+            var standPanel = StandInfoPanelManager.instance != null
+                ? StandInfoPanelManager.instance
+                : FindObjectOfType<StandInfoPanelManager>();
+
+            if (standPanel != null && standPanel.IsOpen)
+            {
+                standPanel.Hide();
+                xWasPressed = xPressed;
+                return;
+            }
+        }
+
+        if ((xPressed && !xWasPressed) || zPressed){
             if (currentHighlight != null && didHit && hit.distance <= raycastLength)
             {
-                ObjectMenuTrigger trigger = currentHighlight.GetComponent<ObjectMenuTrigger>();
-                if (trigger != null) trigger.TryOpenMenu();
+                var infoTrigger = currentHighlight.GetComponent<InfoStandTrigger>();
+                if (infoTrigger != null)
+                {
+                    infoTrigger.TryOpen();
+                }
+                else
+                {
+                    ObjectMenuTrigger trigger = currentHighlight.GetComponent<ObjectMenuTrigger>();
+                    if (trigger != null) trigger.TryOpenMenu();
+                }
             }
         }
         xWasPressed = xPressed;
@@ -135,6 +182,26 @@ public class RaycastPointer : MonoBehaviour
     {
         if (didHit && hit.distance <= raycastLength)
         {
+            InfoStandTrigger infoTrigger = hit.collider.GetComponent<InfoStandTrigger>();
+            if (infoTrigger == null)
+            {
+                infoTrigger = hit.collider.GetComponentInParent<InfoStandTrigger>();
+            }
+
+            if (infoTrigger != null)
+            {
+                Transform t = infoTrigger.transform;
+
+                if (t != currentHighlight)
+                {
+                    ClearHighlight();
+                    Outline o = t.GetComponent<Outline>();
+                    if (o != null) o.enabled = true;
+                    currentHighlight = t;
+                }
+                return;
+            }
+
             ObjectMenuTrigger trigger = hit.collider.GetComponent<ObjectMenuTrigger>();
 
             if (trigger == null)
