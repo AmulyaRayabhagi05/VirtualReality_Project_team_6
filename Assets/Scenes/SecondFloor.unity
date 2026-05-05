@@ -4672,7 +4672,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9a7705cae8ccb4c18996c6d31014b40b, type: 2}
     - target: {fileID: 919132149155446097, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_Name
-      value: jet info sign
+      value: jet simulator info sign
       objectReference: {fileID: 0}
     - target: {fileID: 1151388028547126963, guid: 5238f9dfe5c644c168f722bd0c329f6b, type: 3}
       propertyPath: m_LocalPosition.x

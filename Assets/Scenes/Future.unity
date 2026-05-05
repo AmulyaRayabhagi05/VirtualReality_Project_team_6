@@ -586,6 +586,154 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1533174861}
   m_SourcePrefab: {fileID: 100100000, guid: 96bcb9664139d104aa108d949477bcb9, type: 3}
+--- !u!1001 &18462078
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.94
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 11.76
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.062085144
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9980709
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 172.881
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      propertyPath: m_Name
+      value: future tablet stand
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 18462082}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 18462081}
+    - targetCorrespondingSourceObject: {fileID: 8164078558771037576, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 18462083}
+  m_SourcePrefab: {fileID: 100100000, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+--- !u!1 &18462079 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+  m_PrefabInstance: {fileID: 18462078}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &18462080 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
+  m_PrefabInstance: {fileID: 18462078}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &18462081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18462079}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 0.44705883, g: 1, b: 0, a: 1}
+  outlineWidth: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
+--- !u!114 &18462082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18462079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feead45352d734d2289ee9a7666c370c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InfoStandTrigger
+  title: The future
+  body: 'This is what we beleive the future will entail, it wil entail a cyberpunk
+    style futristic city with plenty of robots, flying cars as well as brain computer
+    interfaces. This is what is to come. Be prepared...... '
+--- !u!64 &18462083
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18462080}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -2432090755550338912, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
 --- !u!1001 &22209866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5916,79 +6064,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 425412369}
   m_SourcePrefab: {fileID: 100100000, guid: 28a37103d89de554a939beb9905b5674, type: 3}
---- !u!1001 &461070120
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.94
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 101
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 11.76
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.062082637
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.998071
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 172.881
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
-      propertyPath: m_Name
-      value: TABLET STAND
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 717a5c9a1edc148aeb6043ddbf1d40e6, type: 3}
 --- !u!1001 &470797639
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22652,4 +22727,4 @@ SceneRoots:
   - {fileID: 507597502}
   - {fileID: 470797639}
   - {fileID: 1474763322}
-  - {fileID: 461070120}
+  - {fileID: 18462078}
