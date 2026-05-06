@@ -211,6 +211,10 @@ public class PlaneMenuController : MonoBehaviour
 
     public void StartSimulation()
     {
-        NetworkSceneLoader.Load("Flight");
+        HideMenu();
+        if (SceneChangeVoteManager.Instance != null)
+            SceneChangeVoteManager.Instance.RequestSceneChange("Flight");
+        else
+            NetworkSceneLoader.Load("Flight");
     }
 }

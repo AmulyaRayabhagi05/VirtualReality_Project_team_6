@@ -70,23 +70,31 @@ public class FloorsMenuController : MonoBehaviour
 
     public void LoadFloorOne()
     {
-        Time.timeScale = 1f;
         PlayerSceneHandler.RestoreMovementOnLoad = true;
-        NetworkSceneLoader.Load("FirstFloor");
+        CloseMenu();
+        RequestFloorSwitch("FirstFloor");
     }
 
     public void LoadFloorTwo()
     {
-        Time.timeScale = 1f;
         PlayerSceneHandler.RestoreMovementOnLoad = true;
-        NetworkSceneLoader.Load("SecondFloor");
+        CloseMenu();
+        RequestFloorSwitch("SecondFloor");
     }
 
     public void LoadFloorThree()
     {
-        Time.timeScale = 1f;
         PlayerSceneHandler.RestoreMovementOnLoad = true;
-        NetworkSceneLoader.Load("Future");
+        CloseMenu();
+        RequestFloorSwitch("Future");
+    }
+
+    private void RequestFloorSwitch(string sceneName)
+    {
+        if (SceneChangeVoteManager.Instance != null)
+            SceneChangeVoteManager.Instance.RequestSceneChange(sceneName);
+        else
+            NetworkSceneLoader.Load(sceneName);
     }
 
     private void HandleNavigation()
