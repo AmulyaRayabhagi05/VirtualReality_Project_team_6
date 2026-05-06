@@ -13,6 +13,11 @@ public class PlayerNetworkSetup : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        ApplyCameraSetup();
+    }
+
+    public void ApplyCameraSetup()
+    {
         if (IsOwner)
         {
             GameObject lobbyCamera = GameObject.Find("LobbyCamera");

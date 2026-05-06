@@ -20,19 +20,32 @@ public class PlayerSceneHandler : NetworkBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!IsOwner) return;
-        if (!RestoreMovementOnLoad) return;
+
+        var spawnObj = GameObject.FindWithTag("PlayerSpawn");
+        bool hasSpawn = spawnObj != null;
+
+        if (!hasSpawn && !RestoreMovementOnLoad) return;
         RestoreMovementOnLoad = false;
 
         var cc = GetComponentInChildren<CharacterController>();
         if (cc != null) cc.enabled = false;
 
-        var planeMenu = FindAnyObjectByType<PlaneMenuController>(FindObjectsInactive.Include);
-        if (planeMenu != null && planeMenu.outsideDestination != null)
-            transform.position = planeMenu.outsideDestination.position;
+        if (hasSpawn)
+        {
+            transform.position = spawnObj.transform.position;
+        }
+        else
+        {
+            var planeMenu = FindAnyObjectByType<PlaneMenuController>(FindObjectsInactive.Include);
+            if (planeMenu != null && planeMenu.outsideDestination != null)
+                transform.position = planeMenu.outsideDestination.position;
+        }
 
         if (cc != null) cc.enabled = true;
 
         var pm = GetComponentInChildren<PlayerMovement>();
         if (pm != null) pm.enabled = true;
+
+        GetComponent<PlayerNetworkSetup>()?.ApplyCameraSetup();
     }
 }

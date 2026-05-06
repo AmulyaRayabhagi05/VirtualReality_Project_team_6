@@ -8,6 +8,7 @@ TagManager:
   - Cube2
   - Cylinder
   - Cube
+  - PlayerSpawn
   layers:
   - Default
   - TransparentFX

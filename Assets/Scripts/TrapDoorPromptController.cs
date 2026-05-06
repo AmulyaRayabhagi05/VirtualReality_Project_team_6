@@ -6,12 +6,12 @@ public class TrapDoorPromptController : MonoBehaviour
     [SerializeField] private Canvas promptCanvas;
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
-    [SerializeField] private string destinationScene = "SecondFloor";
     [SerializeField] private Vector3 spawnOffset = new Vector3(0f, 0f, 1.5f);
     [SerializeField] private bool facePlayer = true;
     [SerializeField] private bool debugPrompt;
 
     private Camera _runtimeCamera;
+    private string destinationScene = "Undergound";
 
     public bool IsOpen
     {

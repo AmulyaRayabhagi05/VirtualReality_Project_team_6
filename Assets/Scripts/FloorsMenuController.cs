@@ -8,6 +8,7 @@ public class FloorsMenuController : MonoBehaviour
     public bool facePlayer = true;
     public Button floorOneButton;
     public Button floorTwoButton;
+    public Button floorThreeButton;
     public Button closeButton;
 
     public CharacterMovement characterMovement;
@@ -16,7 +17,7 @@ public class FloorsMenuController : MonoBehaviour
     public float navigationCooldown = 0.3f;
 
     private int _selectedIndex = 0;
-    private const int OPTION_COUNT = 3;
+    private const int OPTION_COUNT = 4;
 
     private bool _stickNeutral = true;
     private float _cooldownTimer = 0f;
@@ -69,13 +70,22 @@ public class FloorsMenuController : MonoBehaviour
     public void LoadFloorOne()
     {
         Time.timeScale = 1f;
+        PlayerSceneHandler.RestoreMovementOnLoad = true;
         NetworkSceneLoader.Load("FirstFloor");
     }
 
     public void LoadFloorTwo()
     {
         Time.timeScale = 1f;
+        PlayerSceneHandler.RestoreMovementOnLoad = true;
         NetworkSceneLoader.Load("SecondFloor");
+    }
+
+    public void LoadFloorThree()
+    {
+        Time.timeScale = 1f;
+        PlayerSceneHandler.RestoreMovementOnLoad = true;
+        NetworkSceneLoader.Load("Future");
     }
 
     private void HandleNavigation()
@@ -108,7 +118,8 @@ public class FloorsMenuController : MonoBehaviour
         {
             case 0: LoadFloorOne(); break;
             case 1: LoadFloorTwo(); break;
-            case 2: CloseMenu();    break;
+            case 2: LoadFloorThree(); break;
+            case 3: CloseMenu();    break;
         }
     }
 
@@ -116,7 +127,8 @@ public class FloorsMenuController : MonoBehaviour
     {
         SetButtonColor(floorOneButton, _selectedIndex == 0 ? SELECTED_COLOR : UNSELECTED_COLOR);
         SetButtonColor(floorTwoButton, _selectedIndex == 1 ? SELECTED_COLOR : UNSELECTED_COLOR);
-        SetButtonColor(closeButton,    _selectedIndex == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(floorThreeButton, _selectedIndex == 2 ? SELECTED_COLOR : UNSELECTED_COLOR);
+        SetButtonColor(closeButton,    _selectedIndex == 3 ? SELECTED_COLOR : UNSELECTED_COLOR);
     }
 
     private void SetButtonColor(Button btn, Color color)

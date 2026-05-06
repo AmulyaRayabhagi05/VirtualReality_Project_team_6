@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc1ae413c1be9b40ade6253e39620c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterMovement
-  speed: 60
+  speed: 40
   cameraObj: {fileID: 1848455617876835913}
   joyStickMode: 0
 --- !u!114 &8568492926505515763
@@ -1045,6 +1045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReticleJoystickClick
   clickButton: js2
+  clickKey: 102
   debugReticleClick: 1
 --- !u!4 &1848455618462733132 stripped
 Transform:
