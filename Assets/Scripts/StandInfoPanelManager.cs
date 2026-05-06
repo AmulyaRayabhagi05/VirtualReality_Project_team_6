@@ -7,8 +7,8 @@ public class StandInfoPanelManager : MonoBehaviour
     public static StandInfoPanelManager instance;
 
     [Header("Placement")]
-    public float panelWidth = 900f;
-    public float panelHeight = 520f;
+    public float panelWidth = 1400f;
+    public float panelHeight = 800f;
 
     [Header("UI (runtime created if null)")]
     public Canvas canvas;
@@ -46,10 +46,11 @@ public class StandInfoPanelManager : MonoBehaviour
         canvasGO.transform.SetParent(transform, false);
 
         canvas = canvasGO.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 5000;
+        canvas.renderMode = RenderMode.WorldSpace;
 
-        canvasGO.AddComponent<CanvasScaler>();
+        // Scale so pixel units map to metres (900px → 0.9 m wide)
+        canvasGO.transform.localScale = Vector3.one * 0.001f;
+
         canvasGO.AddComponent<GraphicRaycaster>();
 
         canvasGroup = canvasGO.AddComponent<CanvasGroup>();
@@ -71,7 +72,7 @@ public class StandInfoPanelManager : MonoBehaviour
         var titleGO = new GameObject("Title");
         titleGO.transform.SetParent(panelGO.transform, false);
         titleText = titleGO.AddComponent<TextMeshProUGUI>();
-        titleText.fontSize = 44;
+        titleText.fontSize = 64;
         titleText.alignment = TextAlignmentOptions.TopLeft;
         titleText.color = Color.white;
 
@@ -88,7 +89,7 @@ public class StandInfoPanelManager : MonoBehaviour
         var bodyGO = new GameObject("Body");
         bodyGO.transform.SetParent(panelGO.transform, false);
         bodyText = bodyGO.AddComponent<TextMeshProUGUI>();
-        bodyText.fontSize = 28;
+        bodyText.fontSize = 40;
         bodyText.alignment = TextAlignmentOptions.TopLeft;
         bodyText.color = new Color(0.92f, 0.92f, 0.92f, 1f);
         bodyText.enableWordWrapping = true;
@@ -97,11 +98,10 @@ public class StandInfoPanelManager : MonoBehaviour
         bodyRT.anchorMin = new Vector2(0f, 0f);
         bodyRT.anchorMax = new Vector2(1f, 1f);
         bodyRT.pivot = new Vector2(0.5f, 0.5f);
-        bodyRT.offsetMin = new Vector2(30f, 30f);
-        bodyRT.offsetMax = new Vector2(-30f, -120f);
+        bodyRT.offsetMin = new Vector2(30f, 100f);  // leaves room for close button at bottom
+        bodyRT.offsetMax = new Vector2(-30f, -110f); // leaves room for title at top
 
-        // Image (optional)
-        // Close button
+        // Close button — anchored to bottom-centre
         var closeGO = new GameObject("CloseButton");
         closeGO.transform.SetParent(panelGO.transform, false);
         var closeImg = closeGO.AddComponent<Image>();
@@ -109,17 +109,17 @@ public class StandInfoPanelManager : MonoBehaviour
         closeButton = closeGO.AddComponent<Button>();
 
         var closeRT = closeGO.GetComponent<RectTransform>();
-        closeRT.anchorMin = new Vector2(1f, 1f);
-        closeRT.anchorMax = new Vector2(1f, 1f);
-        closeRT.pivot = new Vector2(1f, 1f);
-        closeRT.sizeDelta = new Vector2(140f, 52f);
-        closeRT.anchoredPosition = new Vector2(-30f, -190f);
+        closeRT.anchorMin = new Vector2(0.5f, 0f);
+        closeRT.anchorMax = new Vector2(0.5f, 0f);
+        closeRT.pivot = new Vector2(0.5f, 0f);
+        closeRT.sizeDelta = new Vector2(240f, 65f);
+        closeRT.anchoredPosition = new Vector2(0f, 18f);
 
         var closeTxtGO = new GameObject("Text");
         closeTxtGO.transform.SetParent(closeGO.transform, false);
         var closeTxt = closeTxtGO.AddComponent<TextMeshProUGUI>();
         closeTxt.text = "Press x to close";
-        closeTxt.fontSize = 26;
+        closeTxt.fontSize = 36;
         closeTxt.alignment = TextAlignmentOptions.Center;
         closeTxt.color = Color.white;
         var closeTxtRT = closeTxtGO.GetComponent<RectTransform>();
@@ -140,12 +140,38 @@ public class StandInfoPanelManager : MonoBehaviour
         closeButton.onClick.AddListener(Hide);
     }
 
+    PlayerMovement GetLocalPlayerMovement()
+    {
+        foreach (var pm in FindObjectsOfType<PlayerMovement>())
+            if (pm.IsOwner) return pm;
+        return null;
+    }
+
+    void PlaceInFrontOfCamera()
+    {
+        Camera cam = Camera.main;
+        if (cam == null || canvas == null) return;
+
+        // Flat forward so the panel stays vertical
+        Vector3 forward = cam.transform.forward;
+        forward.y = 0f;
+        if (forward.sqrMagnitude < 0.001f) forward = cam.transform.forward;
+        forward.Normalize();
+
+        canvas.transform.position = cam.transform.position + forward * 1.0f;
+        canvas.transform.rotation = Quaternion.LookRotation(forward);
+    }
+
     public void Show(string title, string body)
     {
         EnsureUI();
 
         if (titleText != null) titleText.text = string.IsNullOrEmpty(title) ? "Info" : title;
         if (bodyText != null) bodyText.text = body ?? "";
+
+        PlaceInFrontOfCamera();
+
+        GetLocalPlayerMovement()?.SetMovementEnabled(false);
 
         canvasGroup.alpha = 1f;
         canvasGroup.interactable = true;
@@ -155,6 +181,8 @@ public class StandInfoPanelManager : MonoBehaviour
     public void Hide()
     {
         EnsureUI();
+
+        GetLocalPlayerMovement()?.SetMovementEnabled(true);
 
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;

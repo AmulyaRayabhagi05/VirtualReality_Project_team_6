@@ -125,7 +125,7 @@ public class CollisionDeathHandler : MonoBehaviour
     {
         if (isDead) {
 		return;
-	}
+	    }
 
         isDead = true;
 
@@ -137,7 +137,7 @@ public class CollisionDeathHandler : MonoBehaviour
 
         if (trackedPoseDriver != null) {
 		trackedPoseDriver.enabled = false;
-	}
+	    }
         flyController.DisableInput();
         flyController.enabled = false;    
         characterController.enabled = false;
@@ -154,9 +154,12 @@ public class CollisionDeathHandler : MonoBehaviour
 
         hapticManager?.TriggerVibration(vibrationDuration, vibrationIntensity);
 
-        if (deathUI != null){
-            deathUI.ShowDeathScreen();
-	}
+        Debug.Log("NEW FLOOR");
+        PlayerSceneHandler.RestoreMovementOnLoad = true;
+        NetworkSceneLoader.Load("SecondFloor");
+        // if (deathUI != null){
+        //     deathUI.ShowDeathScreen();
+        // }
     }
 
     public void Restart()

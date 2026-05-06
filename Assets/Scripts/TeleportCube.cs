@@ -9,11 +9,15 @@ public class TeleportCube : MonoBehaviour
     public PlaneMenuController menuController;
 
     private float gazeDistance = 50f;
+    private Camera _mainCamera;
 
     void Update()
     {
+        if (_mainCamera == null) _mainCamera = Camera.main;
+        if (_mainCamera == null) return;
+
         bool controllerInput = Input.GetButtonDown("js2") || Input.GetKeyDown(KeyCode.M);
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, gazeDistance))

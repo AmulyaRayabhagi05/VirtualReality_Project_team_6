@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -l \"LobbyCamera\\\\|Main Camera\\\\|PlayerSpawn\\\\|playerCamera\" \"c:\\\\Users\\\\Chacko Happy\\\\Documents\\\\GitHub\\\\VirtualReality_Project_team_6\\\\Assets\\\\Scenes\" 2>/dev/null || echo \"searching...\")",
+      "Read(//c/Users/Chacko Happy/Documents/GitHub/VirtualReality_Project_team_6/Assets/Scenes/**)"
+    ]
+  }
+}

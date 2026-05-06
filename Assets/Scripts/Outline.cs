@@ -187,6 +187,11 @@ public class Outline : MonoBehaviour {
         continue;
       }
 
+      // Skip meshes that don't have CPU read access (Read/Write not enabled in import settings)
+      if (!meshFilter.sharedMesh.isReadable) {
+        continue;
+      }
+
       // Retrieve or generate smooth normals
       var index = bakeKeys.IndexOf(meshFilter.sharedMesh);
       var smoothNormals = (index >= 0) ? bakeValues[index].data : SmoothNormals(meshFilter.sharedMesh);

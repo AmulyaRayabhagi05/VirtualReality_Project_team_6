@@ -4,10 +4,14 @@ public class CylinderOpen : MonoBehaviour
 {
     public PlaneMenuController menuController;
     public float gazeDistance = 10f;
+    private Camera _mainCamera;
 
     void Update()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        if (_mainCamera == null) _mainCamera = Camera.main;
+        if (_mainCamera == null) return;
+
+        Ray ray = _mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, gazeDistance))
