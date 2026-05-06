@@ -41,6 +41,7 @@ public class FloorsMenuController : MonoBehaviour
         _cooldownTimer -= Time.unscaledDeltaTime;
         HandleNavigation();
         HandleConfirm();
+        HandleMouseClick();
     }
 
 
@@ -91,14 +92,31 @@ public class FloorsMenuController : MonoBehaviour
     private void HandleNavigation()
     {
         float axis = Input.GetAxis("Vertical");
+        bool upDown = Input.GetKeyDown(KeyCode.UpArrow);
+        bool downDown = Input.GetKeyDown(KeyCode.DownArrow);
 
         if (Mathf.Abs(axis) < stickThreshold)
         {
             _stickNeutral = true;
+            // Still allow keyboard nav when the stick is idle.
+        }
+
+        if (_cooldownTimer > 0f) return;
+
+        // Keyboard navigation (one step per key press).
+        if (upDown || downDown)
+        {
+            _selectedIndex = upDown
+                ? (_selectedIndex - 1 + OPTION_COUNT) % OPTION_COUNT
+                : (_selectedIndex + 1) % OPTION_COUNT;
+            _cooldownTimer = navigationCooldown;
+            UpdateHighlight();
             return;
         }
 
-        if (!_stickNeutral || _cooldownTimer > 0f) return;
+        // Stick navigation (edge-triggered).
+        if (!_stickNeutral) return;
+        if (Mathf.Abs(axis) < stickThreshold) return;
 
         if (axis > stickThreshold)
             _selectedIndex = (_selectedIndex - 1 + OPTION_COUNT) % OPTION_COUNT;
@@ -112,7 +130,19 @@ public class FloorsMenuController : MonoBehaviour
 
     private void HandleConfirm()
     {
-        if (!Input.GetKeyDown(KeyCode.JoystickButton2)) return;
+        bool confirm =
+            Input.GetKeyDown(KeyCode.JoystickButton2) ||
+            Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.KeypadEnter) ||
+            Input.GetKeyDown(KeyCode.Space);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CloseMenu();
+            return;
+        }
+
+        if (!confirm) return;
 
         switch (_selectedIndex)
         {
@@ -120,6 +150,36 @@ public class FloorsMenuController : MonoBehaviour
             case 1: LoadFloorTwo(); break;
             case 2: LoadFloorThree(); break;
             case 3: CloseMenu();    break;
+        }
+    }
+
+    private void HandleMouseClick()
+    {
+        if (!Input.GetMouseButtonDown(0))
+        {
+            return;
+        }
+
+        // If there's no camera assigned to the world-space canvas, fall back to main camera.
+        Camera cam = menuCanvas != null && menuCanvas.worldCamera != null ? menuCanvas.worldCamera : Camera.main;
+
+        TryClickButton(floorOneButton, cam);
+        TryClickButton(floorTwoButton, cam);
+        TryClickButton(floorThreeButton, cam);
+        TryClickButton(closeButton, cam);
+    }
+
+    private void TryClickButton(Button btn, Camera cam)
+    {
+        if (btn == null) return;
+
+        RectTransform rt = btn.GetComponent<RectTransform>();
+        if (rt == null) return;
+
+        // For Screen Space Overlay, camera is ignored. For World Space it’s required.
+        if (RectTransformUtility.RectangleContainsScreenPoint(rt, Input.mousePosition, cam))
+        {
+            btn.onClick.Invoke();
         }
     }
 
