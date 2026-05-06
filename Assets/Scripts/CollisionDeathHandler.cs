@@ -8,10 +8,6 @@ public class CollisionDeathHandler : MonoBehaviour
     public DeathUIManager deathUI;
     public HapticManager hapticManager;
 
-    [Header("Death Flow")]
-    [Tooltip("If true, crash will immediately load SecondFloor instead of showing the death UI.")]
-    public bool autoLoadSecondFloorOnDeath = false;
-
     [Header("Crash Haptic")]
     public float vibrationDuration = 0.8f;
     [Range(0f, 1f)]
@@ -63,7 +59,7 @@ public class CollisionDeathHandler : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(transform.position, dir, out hit, raycastDistance, mountainLayer))
             {   
-                Debug.Log($"Raycast Hit: {hit.collider.gameObject.name} | Distance {hit.distance} | Direction: {dir}");
+                Debug.Log("Raycast Hit: {hit.collider.gameObject.name} | Distance {hit.distance} | Direction: {dir}");
                 TriggerDeath();
                 return;
             }
@@ -103,7 +99,7 @@ public class CollisionDeathHandler : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"Collision Hit: {collision.gameObject.name}| Layer: {collision.gameObject.layer} | Tag: {collision.gameObject.tag} | Has MeshCollider: {collision.gameObject.GetComponent<MeshCollider>() != null} | Contact point: {collision.contacts[0].point} | Relative velocity: {collision.relativeVelocity.magnitude}");
+        Debug.Log("Collision Hit: {collision.gameObject.name}| Layer: {collision.gameObject.layer} | Tag: {collision.gameObject.tag} | Has MeshCollider: {collision.gameObject.GetComponent<MeshCollider>() != null} |  Contact point: {collision.contacts[0].point}| Relative velocity:{collision.relativeVelocity.magnitude}");
 
         if (isDead) {
 		return;
@@ -111,17 +107,17 @@ public class CollisionDeathHandler : MonoBehaviour
 	
         if ((ignoreLayers.value & (1 << collision.gameObject.layer)) != 0)
         {
-            Debug.Log($"Collision ignored: {collision.gameObject.name} is being ignored");
+            Debug.Log("Collision ignored: {collision.gameObject.name} is being ignored");
             return;
         }
 
-        Debug.Log($"Collision death by {collision.gameObject.name}");
+        Debug.Log("Collision death by {collision.gameObject.name}");
         TriggerDeath();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Trigger Entered: {other.gameObject.name} | Layer: {other.gameObject.layer} | Has MeshCollider: {other.gameObject.GetComponent<MeshCollider>() != null}");
+        Debug.Log("Trigger Entered: {other.gameObject.name} | Layer: {other.gameObject.layer}| Has MeshCollider: {other.gameObject.GetComponent<MeshCollider>() != null}");
     }
 
 
@@ -158,29 +154,12 @@ public class CollisionDeathHandler : MonoBehaviour
 
         hapticManager?.TriggerVibration(vibrationDuration, vibrationIntensity);
 
-        if (autoLoadSecondFloorOnDeath)
-        {
-            Debug.Log("[CollisionDeathHandler] Auto-loading SecondFloor on crash.");
-            PlayerSceneHandler.RestoreMovementOnLoad = true;
-            NetworkSceneLoader.Load("SecondFloor");
-            return;
-        }
-
-        if (deathUI == null)
-        {
-            deathUI = FindObjectOfType<DeathUIManager>(true);
-        }
-
-        if (deathUI != null)
-        {
-            deathUI.ShowDeathScreen();
-        }
-        else
-        {
-            Debug.LogWarning("[CollisionDeathHandler] No DeathUIManager found; falling back to loading SecondFloor.", this);
-            PlayerSceneHandler.RestoreMovementOnLoad = true;
-            NetworkSceneLoader.Load("SecondFloor");
-        }
+        Debug.Log("NEW FLOOR");
+        PlayerSceneHandler.RestoreMovementOnLoad = true;
+        NetworkSceneLoader.Load("SecondFloor");
+        // if (deathUI != null){
+        //     deathUI.ShowDeathScreen();
+        // }
     }
 
     public void Restart()
