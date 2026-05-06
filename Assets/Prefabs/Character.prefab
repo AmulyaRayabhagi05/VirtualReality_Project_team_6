@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3263423796
+  GlobalObjectIdHash: 825579384
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -816,6 +816,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7287137020755404948, guid: 186741bf17cbb0e4fa3ef06daa1f190f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6906237500095464514}
+    - targetCorrespondingSourceObject: {fileID: 7287137020755404948, guid: 186741bf17cbb0e4fa3ef06daa1f190f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2887079061156683788}
     - targetCorrespondingSourceObject: {fileID: 7287137020585607025, guid: 186741bf17cbb0e4fa3ef06daa1f190f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7189542051048553686}
@@ -1012,6 +1015,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClickInputController
   rayDistance: 50
+--- !u!114 &2887079061156683788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848455617876835913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d4a84f0c0a54ff0a9a2c76b4e3b0d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OneTimeStartupMessage
+  message: Welcome to our virtual museum that we have created all various eras and
+    various floors, please make sure to find a white stand for information about
+    an era and then a blue icon to find more information about activities. Enjoy!
+  playerPrefsKey: FirstFloor_StartupMessage_Shown
+  autoHideSeconds: 4
+  allowManualClose: 1
 --- !u!81 &1848455617876835919 stripped
 AudioListener:
   m_CorrespondingSourceObject: {fileID: 7287137020755404946, guid: 186741bf17cbb0e4fa3ef06daa1f190f, type: 3}
