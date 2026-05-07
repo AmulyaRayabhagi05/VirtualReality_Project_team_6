@@ -18,12 +18,15 @@ public class PlaneMenuController : MonoBehaviour
     public float stickThreshold = 0.5f;
     public float navigationCooldown = 0.3f;
     public static bool IsJustOpened { get; private set; }
+    public bool IsMenuOpen => menuPanelGroup != null && menuPanelGroup.alpha > 0f;
 
     private int _selectedIndex = 0;
     private const int OPTION_COUNT = 3;
     private bool _stickNeutral = true;
     private float _cooldownTimer = 0f;
     private float _openCooldown = 0f;
+    private float _enteredPlaneCooldown = 0f;
+    private bool _cWasDown = false;
 
     private static readonly Color SELECTED_COLOR = new Color(1f, 0.85f, 0f);
     private static readonly Color UNSELECTED_COLOR = Color.white;
@@ -59,6 +62,24 @@ public class PlaneMenuController : MonoBehaviour
 
     void Update()
     {
+        // PC: when you're already inside the plane, allow opening the cockpit menu with C.
+        // (_frozenPlayer is set by TeleportCube.NotifyEnteredPlane)
+        if (menuPanelGroup.alpha <= 0f)
+        {
+            _enteredPlaneCooldown -= Time.unscaledDeltaTime;
+
+            bool cDown = Input.GetKey(KeyCode.C);
+            bool cPressedEdge = cDown && !_cWasDown;
+            _cWasDown = cDown;
+
+            // Prevent immediate open on the same keypress used to enter the plane.
+            if (_frozenPlayer != null && _enteredPlaneCooldown <= 0f && cPressedEdge)
+            {
+                ShowMenu();
+            }
+            return;
+        }
+
         if (menuPanelGroup.alpha > 0f)
         {
             _openCooldown -= Time.unscaledDeltaTime;
@@ -75,15 +96,37 @@ public class PlaneMenuController : MonoBehaviour
 
     private void HandleNavigation()
     {
-        float axis = Input.GetAxis("Vertical");
+        // Some Android controllers report D-pad / stick on different axes.
+        // Use the dominant axis magnitude so up/down works across mappings.
+        float vAxis = Input.GetAxisRaw("Vertical");
+        float hAxis = Input.GetAxisRaw("Horizontal");
+        float axis = Mathf.Abs(vAxis) >= Mathf.Abs(hAxis) ? vAxis : hAxis;
+        bool upDown = Input.GetKeyDown(KeyCode.UpArrow);
+        bool downDown = Input.GetKeyDown(KeyCode.DownArrow);
 
         if (Mathf.Abs(axis) < stickThreshold)
         {
             _stickNeutral = true;
+            // Still allow keyboard nav when stick is idle.
+        }
+
+        if (_cooldownTimer > 0f) return;
+
+        // Keyboard navigation (one step per key press).
+        if (upDown || downDown)
+        {
+            _selectedIndex = upDown
+                ? (_selectedIndex - 1 + OPTION_COUNT) % OPTION_COUNT
+                : (_selectedIndex + 1) % OPTION_COUNT;
+
+            _cooldownTimer = navigationCooldown;
+            UpdateHighlight();
             return;
         }
 
-        if (!_stickNeutral || _cooldownTimer > 0f) return;
+        // Stick navigation (edge-triggered).
+        if (!_stickNeutral) return;
+        if (Mathf.Abs(axis) < stickThreshold) return;
 
         if (axis > stickThreshold)
             _selectedIndex = (_selectedIndex - 1 + OPTION_COUNT) % OPTION_COUNT;
@@ -97,7 +140,19 @@ public class PlaneMenuController : MonoBehaviour
 
     private void HandleConfirm()
     {
-        if (!Input.GetKeyDown(KeyCode.JoystickButton2)) return;
+        bool confirm =
+            Input.GetKeyDown(KeyCode.JoystickButton2) ||
+            Input.GetKeyDown(KeyCode.Return) ||
+            Input.GetKeyDown(KeyCode.KeypadEnter) ||
+            Input.GetKeyDown(KeyCode.Space);
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            HideMenu();
+            return;
+        }
+
+        if (!confirm) return;
 
         switch (_selectedIndex)
         {
@@ -182,6 +237,7 @@ public class PlaneMenuController : MonoBehaviour
     public void NotifyEnteredPlane(GameObject player)
     {
         _frozenPlayer = player;
+        _enteredPlaneCooldown = 0.35f;
     }
 
     public void GoOutside()

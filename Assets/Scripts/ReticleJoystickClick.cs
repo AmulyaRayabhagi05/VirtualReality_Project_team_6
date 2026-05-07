@@ -42,6 +42,13 @@ public class ReticleJoystickClick : MonoBehaviour
             LogDebug("menu opened in secondFloor");
             return;
         }
+        // When the plane cockpit menu is open, we want joystick navigation only (no reticle UI clicking).
+        var planeMenu = FindFirstObjectByType<PlaneMenuController>();
+        if (planeMenu != null && planeMenu.IsMenuOpen)
+        {
+            LogDebug("Plane menu is open; reticle click disabled.");
+            return;
+        }
 
         LogDebug($"Click input received: {clickButton} or {clickKey}");
 
