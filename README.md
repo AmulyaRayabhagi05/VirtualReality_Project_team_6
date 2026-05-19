@@ -32,10 +32,9 @@ This project implements two advanced technical features:
 ---
 
 ## Project Demo
-*(Space reserved for Demo Video/Link)*
 
 > **Note:** 
-https://youtu.be/umk9iiPaZg4
+[https://youtu.be/umk9iiPaZg4](https://youtu.be/GaXPbAd4AEo)
 ---
 
 ## Installation & Usage
